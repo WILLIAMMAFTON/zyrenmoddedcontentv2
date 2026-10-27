@@ -1,0 +1,20 @@
+{
+  "_fv": 89,
+  "_type": "achievement",
+  "definition": {
+    "achievementName": "Pure suffering",
+    "achievementDescription": "get clapped by a high level currupted core player",
+    "achievementIcon": "Blocks.BARRIER",
+    "background": "Default",
+    "disableDisplay": false,
+    "showPopup": true,
+    "announceToChat": true,
+    "hideIfNotCompleted": true,
+    "rewardLoot": [],
+    "rewardRecipes": [],
+    "rewardXP": 0,
+    "achievementType": "goal",
+    "parent": "end/root",
+    "triggerxml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"advancement_trigger\" deletable=\"false\" x=\"40\" y=\"80\"><next><shadow type=\"custom_trigger\"></shadow></next></block></xml>"
+  }
+}

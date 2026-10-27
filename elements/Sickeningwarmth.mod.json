@@ -1,0 +1,19 @@
+{
+  "_fv": 89,
+  "_type": "potioneffect",
+  "definition": {
+    "effectName": "Sickening Warmth",
+    "icon": "radiation",
+    "color": {
+      "value": -256,
+      "falpha": 0.0
+    },
+    "onAddedSound": "",
+    "isInstant": true,
+    "mobEffectCategory": "HARMFUL",
+    "renderStatusInInventory": true,
+    "renderStatusInHUD": true,
+    "isCuredbyHoney": false,
+    "modifiers": []
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:soul_campfire"
+    },
+    "title": {
+      "translate": "advancements.whoneedstobeagodtowin.title"
+    },
+    "description": {
+      "translate": "advancements.whoneedstobeagodtowin.descr"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "whoneedstobeagodtowin_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "zyrenmoddedcontent_v2:puresuffering"
+}

@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:cooked_salmon"
+    },
+    "title": {
+      "translate": "advancements.animalpals.title"
+    },
+    "description": {
+      "translate": "advancements.animalpals.descr"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "animalpals_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "zyrenmoddedcontent_v2:acention"
+}

@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:bowl"
+    },
+    "title": {
+      "translate": "advancements.werediditgo.title"
+    },
+    "description": {
+      "translate": "advancements.werediditgo.descr"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "werediditgo_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "zyrenmoddedcontent_v2:acention"
+}

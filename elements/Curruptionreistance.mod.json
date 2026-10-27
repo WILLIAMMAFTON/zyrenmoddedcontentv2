@@ -1,0 +1,19 @@
+{
+  "_fv": 89,
+  "_type": "potioneffect",
+  "definition": {
+    "effectName": "Curruption Resistance",
+    "icon": "huh",
+    "color": {
+      "value": -13434829,
+      "falpha": 0.0
+    },
+    "onAddedSound": "block.amethyst_block.resonate",
+    "isInstant": true,
+    "mobEffectCategory": "BENEFICIAL",
+    "renderStatusInInventory": true,
+    "renderStatusInHUD": true,
+    "isCuredbyHoney": false,
+    "modifiers": []
+  }
+}

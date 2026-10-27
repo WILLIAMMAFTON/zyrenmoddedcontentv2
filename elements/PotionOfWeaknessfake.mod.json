@@ -1,0 +1,20 @@
+{
+  "_fv": 89,
+  "_type": "potion",
+  "definition": {
+    "potionName": "Potion of Potion Of Cultivation",
+    "splashName": "Splash Potion of Potion Of Cultivation",
+    "lingeringName": "Lingering Potion of Potion Of Cultivation",
+    "arrowName": "Arrow of Potion Of Cultivation",
+    "effects": [
+      {
+        "effect": "CUSTOM:Sickeningwarmth",
+        "duration": 3600,
+        "infinite": false,
+        "amplifier": 0,
+        "ambient": false,
+        "showParticles": false
+      }
+    ]
+  }
+}

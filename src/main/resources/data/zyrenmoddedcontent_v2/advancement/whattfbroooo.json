@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:wooden_sword"
+    },
+    "title": {
+      "translate": "advancements.whattfbroooo.title"
+    },
+    "description": {
+      "translate": "advancements.whattfbroooo.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "whattfbroooo_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "zyrenmoddedcontent_v2:puresuffering"
+}

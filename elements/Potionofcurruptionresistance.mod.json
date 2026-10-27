@@ -1,0 +1,20 @@
+{
+  "_fv": 89,
+  "_type": "potion",
+  "definition": {
+    "potionName": "Potion of Corruption Resistance",
+    "splashName": "Potion of Splash Corruption Resistance",
+    "lingeringName": "Lingering Potion of Corruption Resistance",
+    "arrowName": "Arrow of Potion of Corruption Resistance",
+    "effects": [
+      {
+        "effect": "CUSTOM:Curruptionreistance",
+        "duration": 3600,
+        "infinite": false,
+        "amplifier": 0,
+        "ambient": false,
+        "showParticles": true
+      }
+    ]
+  }
+}

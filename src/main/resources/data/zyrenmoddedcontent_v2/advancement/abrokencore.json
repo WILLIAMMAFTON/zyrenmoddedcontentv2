@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "abrokencore_0": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}
