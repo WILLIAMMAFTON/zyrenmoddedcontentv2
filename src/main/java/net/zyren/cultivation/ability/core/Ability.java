@@ -128,6 +128,15 @@ public abstract class Ability {
 		return List.of();
 	}
 
+	/**
+	 * Pressing the ability again while it's running (e.g. Moon High Tide: second press pushes enemies
+	 * out). Checked before the cooldown / Qi checks. Return null for "not a recast" (normal use), or
+	 * the result of the recast (free, no cooldown change).
+	 */
+	public ActionResult onRecast(ServerPlayer player) {
+		return null;
+	}
+
 	/** Extra preconditions checked before paying (e.g. a target exists). */
 	public ActionResult checkUse(ServerPlayer player) {
 		return ActionResult.ok("");

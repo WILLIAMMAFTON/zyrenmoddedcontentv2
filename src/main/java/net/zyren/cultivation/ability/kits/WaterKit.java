@@ -1,20 +1,12 @@
 package net.zyren.cultivation.ability.kits;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.BiomeTags;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.levelgen.Heightmap;
-
-import com.mojang.datafixers.util.Pair;
 
 import net.zyren.cultivation.ability.core.Ability;
 import net.zyren.cultivation.ability.core.AbilitySlot;
@@ -26,31 +18,27 @@ import net.zyren.cultivation.ability.core.EffectHelper;
 import net.zyren.cultivation.ability.core.QiEffects;
 import net.zyren.cultivation.ability.core.Targeting;
 import net.zyren.cultivation.config.AbilityConfig;
-import net.zyren.cultivation.data.AspectData;
+import net.zyren.cultivation.config.WaterConfig;
 import net.zyren.cultivation.data.AspectType;
-import net.zyren.cultivation.data.QiData;
 import net.zyren.cultivation.system.ActionResult;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
- * WATER (source-of-truth document + decisions 2026-10-07).
+ * WATER — DEFAULT kit (ASPECT GUIDE, user decisions 2026-10-29). Replaces the old Water kit; only the
+ * old Reinforce Body is kept (the guide doesn't define one yet). Values: water-server.toml.
  *
- *   Passive        2 Qi/min (1 in water/rain): Speed I, Night Vision, Feather Falling I, Water Breathing;
- *                  in water/rain also Regeneration I + Resistance I. Off within 1 block of lava/fire and
- *                  in the Nether/End.
- *   Attack 1       10 Qi: 2x total output for 30 s.
- *   Heavy          30 Qi: next hit gets Knockback XXV (enchantment-style).
- *   Reinforce      20 Qi: standard + immune to fall damage.
- *   Powerblast 1   Water Surge: 30 Qi, 2 min: Speed III, Haste II, 2x output, immune to Fire-aspect powers.
- *   Powerblast 2   Domain Expansion: 40 Qi: one-block-high flood (radius 20, drains after 30 s);
- *                  non-Water, non-allied Qi users within 20 blinded.
- *   Ability 1      Say Hi to the Fishies: 50 Qi: targeted player teleported to the nearest ocean.
- *   Ability 2      Did I Say You Can Be Here?: 100 Qi: launched at the nearest player, 5x output,
- *                  fires within 100 put out, Fire users within 50 nullified (+ Weakness II unless Reinforced).
+ *   Passive      1 Qi/s while in water (not rain): Regeneration I, Conduit Power, Water Breathing,
+ *                Strength I. After leaving water it can't turn on again for 10 s.
+ *   Attack 1     water fists: 15 Qi, 108 s. Next 10 valid hits: +4 unarmed / +2.5 with a weapon.
+ *   Heavy        yeet: 30 Qi, 140 s. Next hit throws the target 10 blocks back.
+ *   Reinforce    (old Water Reinforce Body: standard + fall damage immunity)
+ *   Powerblast 1 tidal blast: 25 Qi, 380 s. Unallied players within 10: 5 damage, launched back 5;
+ *                water sources around you (radius 5, drain after 30 s).
+ *   Powerblast 2 water seeker: 35 Qi, 30 s. Teleport to water / a Water ally / the ocean.
+ *   Ability 1    my area now: 100 Qi, 180 s, 480 s cooldown, can break core. Aura (radius 30).
+ *   Ability 2    OCEANIC DOOM: 200 Qi, 180 s, 480 s cooldown, can break core.
  */
 public final class WaterKit {
 	static final AspectType W = AspectType.WATER;
@@ -58,18 +46,62 @@ public final class WaterKit {
 	private WaterKit() {
 	}
 
+	static final Passive PASSIVE = new Passive();
+	static final WaterFists FISTS = new WaterFists();
+	static final MyAreaNow MY_AREA = new MyAreaNow();
+	static final OceanicDoom OCEANIC_DOOM = new OceanicDoom();
+	static final WaterSeeker SEEKER = new WaterSeeker();
+
 	public static AspectKit create() {
-		return new AspectKit(W, new Passive(),
-				new Attack1(), new Heavy(), new Reinforce(), new WaterSurge(), new DomainExpansion(), new Fishies(), new DidISay());
+		return new AspectKit(W, PASSIVE,
+				FISTS, new Yeet(), new Reinforce(), new TidalBlast(), SEEKER, MY_AREA, OCEANIC_DOOM);
 	}
 
-	static boolean inNetherOrEnd(Level level) {
-		return level.dimension() == Level.NETHER || level.dimension() == Level.END;
+	// ------------------------------------------------------------------ helpers (shared with the sub-aspects)
+
+	static int seconds(int s) {
+		return s * 20;
 	}
 
-	static boolean nearLavaOrFire(LivingEntity e) {
-		return e.level().getBlockStatesIfLoaded(e.getBoundingBox().inflate(1.0))
-				.anyMatch(s -> s.is(BlockTags.FIRE) || s.getFluidState().is(FluidTags.LAVA));
+	/** The world's night (false in the Nether / End: no day cycle). */
+	static boolean isNight(Level level) {
+		return level.isNight();
+	}
+
+	/** Standing in a water SOURCE block (feet or head). */
+	static boolean inWaterSource(LivingEntity e) {
+		var lvl = e.level();
+		var feet = lvl.getFluidState(e.blockPosition());
+		var head = lvl.getFluidState(net.minecraft.core.BlockPos.containing(e.getEyePosition()));
+		return feet.is(FluidTags.WATER) && feet.isSource() || head.is(FluidTags.WATER) && head.isSource();
+	}
+
+	/** Valid unallied players within {@code radius} of the user. */
+	static List<ServerPlayer> unalliedWithin(ServerPlayer user, double radius) {
+		List<ServerPlayer> out = new ArrayList<>();
+		for (ServerPlayer o : user.serverLevel().players())
+			if (Targeting.isValid(user, o) && !Targeting.isAllied(user, o) && o.distanceTo(user) <= radius)
+				out.add(o);
+		return out;
+	}
+
+	/** Nearest valid unallied player within range that the user can see, or null. */
+	static ServerPlayer nearestVisibleUnallied(ServerPlayer user, double range) {
+		ServerPlayer best = null;
+		for (ServerPlayer o : unalliedWithin(user, range))
+			if (user.hasLineOfSight(o) && (best == null || o.distanceToSqr(user) < best.distanceToSqr(user)))
+				best = o;
+		return best;
+	}
+
+	/** Rain for this long (only where weather exists: not the Nether / End). */
+	static void rain(ServerLevel level, int ticks) {
+		if (level.dimensionType().hasSkyLight() && !level.dimensionType().ultraWarm() && !level.dimensionType().hasCeiling())
+			level.setWeatherParameters(0, ticks, true, false);
+	}
+
+	public static boolean isDefaultPassive(AspectPassive p) {
+		return p == PASSIVE;
 	}
 
 	// ------------------------------------------------------------------ passive
@@ -77,56 +109,64 @@ public final class WaterKit {
 	static final class Passive extends AspectPassive {
 		@Override
 		public boolean conditionMet(ServerPlayer player) {
-			return !inNetherOrEnd(player.level()) && !nearLavaOrFire(player);
+			return WaterEvents.passiveCondition(player);
 		}
 
 		@Override
 		public double upkeepPerTick(ServerPlayer player) {
-			double perMin = player.isInWaterOrRain() ? AbilityConfig.WATER_PASSIVE_QI_PER_MIN_WET.get() : AbilityConfig.WATER_PASSIVE_QI_PER_MIN.get();
-			return perSeconds(perMin, 60);
+			return perSeconds(WaterConfig.PASSIVE_QI_PER_SECOND.get(), 1);
 		}
 
 		@Override
 		public void refreshEffects(ServerPlayer player) {
-			EffectHelper.apply(player, MobEffects.MOVEMENT_SPEED, AbilityConfig.WATER_PASSIVE_SPEED.get(), 50, false);
-			EffectHelper.apply(player, MobEffects.NIGHT_VISION, 1, 260, false);
+			EffectHelper.applyPassive(player, MobEffects.REGENERATION, WaterConfig.PASSIVE_REGEN.get());
+			EffectHelper.apply(player, MobEffects.CONDUIT_POWER, 1, 50, false);
 			EffectHelper.apply(player, MobEffects.WATER_BREATHING, 1, 50, false);
-			if (player.isInWaterOrRain()) {
-				EffectHelper.applyPassive(player, MobEffects.REGENERATION, AbilityConfig.WATER_PASSIVE_WET_REGEN.get());
-				EffectHelper.apply(player, MobEffects.DAMAGE_RESISTANCE, AbilityConfig.WATER_PASSIVE_WET_RESISTANCE.get(), 50, false);
-			}
+			EffectHelper.apply(player, MobEffects.DAMAGE_BOOST, WaterConfig.PASSIVE_STRENGTH.get(), 50, false);
 		}
 	}
 
-	// ------------------------------------------------------------------ abilities
+	// ------------------------------------------------------------------ Attack 1
 
-	static final class Attack1 extends Ability {
-		Attack1() {
-			super(W, AbilitySlot.ATTACK_1, "Attack 1");
+	/** Charges live in WaterEvents, tied to the buff "water_fists" (a form change / nullify ends them). */
+	static final class WaterFists extends Ability {
+		WaterFists() {
+			super(W, AbilitySlot.ATTACK_1, "water fists");
 		}
 
 		@Override
 		public double baseCost(Player p) {
-			return AbilityConfig.WATER_ATTACK1_COST.get();
+			return WaterConfig.A1_COST.get();
 		}
 
 		@Override
 		public int cooldownTicks() {
-			return AbilityConfig.WATER_ATTACK1_COOLDOWN.get();
+			return seconds(WaterConfig.A1_COOLDOWN.get());
+		}
+
+		@Override
+		public boolean canBreakCore() {
+			return false;
+		}
+
+		@Override
+		public ActionResult checkUse(ServerPlayer player) {
+			return WaterEvents.fistCharges(player) > 0 ? ActionResult.fail(name() + " is already active.") : ActionResult.ok("");
 		}
 
 		@Override
 		public ActionResult perform(ServerPlayer player) {
-			long now = player.serverLevel().getGameTime();
-			AbilityState.of(player).addBuff(new Buff("water_attack1", W, AbilityConfig.WATER_ATTACK1_OUTPUT.get(), 0, false,
-					now + AbilityConfig.WATER_ATTACK1_TICKS.get()));
-			return ActionResult.ok("Tidal force: double damage for 30 s.");
+			int hits = WaterConfig.A1_HITS.get();
+			WaterEvents.startFists(player, hits);
+			return ActionResult.ok("Water fists: your next " + hits + " hits strike harder.");
 		}
 	}
 
-	static final class Heavy extends Ability {
-		Heavy() {
-			super(W, AbilitySlot.HEAVY, "Heavy");
+	// ------------------------------------------------------------------ Heavy
+
+	static final class Yeet extends Ability {
+		Yeet() {
+			super(W, AbilitySlot.HEAVY, "yeet");
 		}
 
 		@Override
@@ -136,25 +176,28 @@ public final class WaterKit {
 
 		@Override
 		public double baseCost(Player p) {
-			return AbilityConfig.WATER_HEAVY_COST.get();
+			return WaterConfig.A2_COST.get();
 		}
 
 		@Override
 		public int cooldownTicks() {
-			return AbilityConfig.WATER_HEAVY_COOLDOWN.get();
+			return seconds(WaterConfig.A2_COOLDOWN.get());
 		}
 
 		@Override
 		public ActionResult perform(ServerPlayer player) {
-			return ActionResult.ok("Wave ready: your next hit has Knockback XXV.");
+			return ActionResult.ok("Yeet ready: your next hit throws them.");
 		}
 
 		@Override
 		public float onEmpoweredHit(ServerPlayer attacker, LivingEntity target, float damage) {
-			QiEffects.knockback(target, attacker, AbilityConfig.WATER_HEAVY_KNOCKBACK.get(), false);
+			if (QiEffects.canAffect(target, false))
+				WaterEvents.push(target, attacker.position(), WaterConfig.A2_BLOCKS.get());
 			return damage;
 		}
 	}
+
+	// ------------------------------------------------------------------ Reinforce (old one, kept)
 
 	static final class Reinforce extends Ability {
 		Reinforce() {
@@ -183,160 +226,148 @@ public final class WaterKit {
 		}
 	}
 
-	static final class WaterSurge extends Ability {
-		WaterSurge() {
-			super(W, AbilitySlot.POWERBLAST_1, "Water Surge");
+	// ------------------------------------------------------------------ Powerblast 1
+
+	static final class TidalBlast extends Ability {
+		TidalBlast() {
+			super(W, AbilitySlot.POWERBLAST_1, "tidal blast");
 		}
 
 		@Override
 		public double baseCost(Player p) {
-			return AbilityConfig.WATER_PB1_COST.get();
+			return WaterConfig.PB1_COST.get();
 		}
 
 		@Override
 		public int cooldownTicks() {
-			return AbilityConfig.WATER_PB1_COOLDOWN.get();
+			return seconds(WaterConfig.PB1_COOLDOWN.get());
 		}
 
 		@Override
 		public ActionResult perform(ServerPlayer player) {
-			int ticks = AbilityConfig.WATER_PB1_DURATION.get();
-			long now = player.serverLevel().getGameTime();
-			EffectHelper.apply(player, MobEffects.MOVEMENT_SPEED, AbilityConfig.WATER_PB1_SPEED.get(), ticks, true);
-			EffectHelper.apply(player, MobEffects.DIG_SPEED, AbilityConfig.WATER_PB1_HASTE.get(), ticks, true);
-			AbilityState.of(player).addBuff(new Buff("water_surge", W, AbilityConfig.WATER_PB1_OUTPUT.get(), 0, false, now + ticks));
-			WaterEvents.startSurge(player, ticks);
-			return ActionResult.ok("Water Surge! 2 minutes, Fire can't touch you.");
-		}
-	}
-
-	static final class DomainExpansion extends Ability {
-		DomainExpansion() {
-			super(W, AbilitySlot.POWERBLAST_2, "Domain Expansion");
-		}
-
-		@Override
-		public double baseCost(Player p) {
-			return AbilityConfig.WATER_PB2_COST.get();
-		}
-
-		@Override
-		public int cooldownTicks() {
-			return AbilityConfig.WATER_PB2_COOLDOWN.get();
-		}
-
-		@Override
-		public ActionResult perform(ServerPlayer player) {
-			double r = AbilityConfig.WATER_PB2_RADIUS.get();
-			int placed = player.serverLevel().dimensionType().ultraWarm() ? 0 : WaterEvents.flood(player, r);
-			int blinded = 0;
-			for (ServerPlayer t : player.serverLevel().players()) {
-				if (!Targeting.isValid(player, t) || Targeting.isAllied(player, t) || t.distanceTo(player) > r)
-					continue;
-				if (QiData.of(t).getCoreLevel() < 1 || AspectData.of(t).getActive() == W)
-					continue; // only non-Water Qi users
-				if (QiEffects.applyEffect(t, MobEffects.BLINDNESS, 1, AbilityConfig.WATER_PB2_BLIND_TICKS.get(), false))
-					blinded++;
+			int hit = 0;
+			for (ServerPlayer t : unalliedWithin(player, WaterConfig.PB1_RADIUS.get())) {
+				QiEffects.dealDamage(player, t, WaterConfig.PB1_DAMAGE.get().floatValue());
+				if (QiEffects.canAffect(t, false))
+					WaterEvents.push(t, player.position(), WaterConfig.PB1_PUSH_BLOCKS.get());
+				hit++;
 			}
-			return ActionResult.ok("Domain Expansion: " + placed + " blocks flooded, " + blinded + " blinded.");
+			int placed = player.serverLevel().dimensionType().ultraWarm() ? 0
+					: WaterEvents.flood(player, WaterConfig.PB1_WATER_RADIUS.get(), seconds(WaterConfig.PB1_WATER_SECONDS.get()));
+			player.serverLevel().playSound(null, player.blockPosition(), net.minecraft.sounds.SoundEvents.GENERIC_SPLASH, net.minecraft.sounds.SoundSource.PLAYERS, 2f, 0.8f);
+			return ActionResult.ok("Tidal blast: " + hit + " hit, " + placed + " water placed.");
 		}
 	}
 
-	static final class Fishies extends Ability {
-		private final Map<UUID, ServerPlayer> targets = new HashMap<>();
-		private final Map<UUID, BlockPos> oceans = new HashMap<>();
+	// ------------------------------------------------------------------ Powerblast 2
 
-		Fishies() {
-			super(W, AbilitySlot.ABILITY_1, "Say Hi to the Fishies");
+	static final class WaterSeeker extends Ability {
+		WaterSeeker() {
+			super(W, AbilitySlot.POWERBLAST_2, "water seeker");
 		}
 
 		@Override
 		public double baseCost(Player p) {
-			return AbilityConfig.WATER_A1_COST.get();
+			return WaterConfig.PB2_COST.get();
 		}
 
 		@Override
 		public int cooldownTicks() {
-			return AbilityConfig.WATER_A1_COOLDOWN.get();
+			return seconds(WaterConfig.PB2_COOLDOWN.get());
 		}
 
 		@Override
 		public ActionResult checkUse(ServerPlayer player) {
-			ServerPlayer t = Targeting.defaultTarget(player);
-			if (t == null)
-				return ActionResult.fail("No target (hit or look at a player).");
-			if (!QiEffects.canAffect(t, false))
-				return ActionResult.fail(t.getName().getString() + " is Reinforced.");
-			ServerLevel level = t.serverLevel();
-			if (net.zyren.cultivation.ability.core.SearchThrottle.blocked(player, "fishies"))
-				return ActionResult.fail("No ocean nearby. Try again in a few seconds.");
-			Pair<BlockPos, Holder<Biome>> found = level.findClosestBiome3d(b -> b.is(BiomeTags.IS_OCEAN), t.blockPosition(),
-					AbilityConfig.WATER_A1_SEARCH_RADIUS.get(), 32, 64);
-			if (found == null)
-				net.zyren.cultivation.ability.core.SearchThrottle.failed(player, "fishies", 100);
-			if (found == null)
-				return ActionResult.fail("No ocean within " + AbilityConfig.WATER_A1_SEARCH_RADIUS.get() + " blocks.");
-			targets.put(player.getUUID(), t);
-			oceans.put(player.getUUID(), found.getFirst());
-			return ActionResult.ok("");
+			return WaterEvents.planSeek(player);
 		}
 
 		@Override
 		public ActionResult perform(ServerPlayer player) {
-			ServerPlayer t = targets.remove(player.getUUID());
-			BlockPos ocean = oceans.remove(player.getUUID());
-			if (t == null || ocean == null || !Targeting.isValid(player, t))
-				return ActionResult.fail("Target lost.");
-			ServerLevel level = t.serverLevel();
-			level.getChunk(ocean.getX() >> 4, ocean.getZ() >> 4); // load it so the surface height is real
-			int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, ocean.getX(), ocean.getZ());
-			t.teleportTo(ocean.getX() + 0.5, y, ocean.getZ() + 0.5);
-			t.fallDistance = 0;
-			return ActionResult.ok("Say hi to the fishies, " + t.getName().getString() + "!");
+			return WaterEvents.executeSeek(player);
 		}
 	}
 
-	static final class DidISay extends Ability {
-		DidISay() {
-			super(W, AbilitySlot.ABILITY_2, "Did I Say You Can Be Here?");
+	// ------------------------------------------------------------------ Ability 1
+
+	/** Aura ticked by WaterEvents while running. */
+	static final class MyAreaNow extends Ability {
+		MyAreaNow() {
+			super(W, AbilitySlot.ABILITY_1, "my area now");
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.SUSTAINED;
+		}
+
+		@Override
+		public int sustainTicks() {
+			return seconds(WaterConfig.AB1_SECONDS.get());
 		}
 
 		@Override
 		public double baseCost(Player p) {
-			return AbilityConfig.WATER_A2_COST.get();
+			return WaterConfig.AB1_COST.get();
 		}
 
 		@Override
 		public int cooldownTicks() {
-			return AbilityConfig.WATER_A2_COOLDOWN.get();
-		}
-
-		@Override
-		public ActionResult checkUse(ServerPlayer player) {
-			return inNetherOrEnd(player.level()) ? ActionResult.fail("Water has no power here.") : ActionResult.ok("");
+			return seconds(WaterConfig.AB1_COOLDOWN.get());
 		}
 
 		@Override
 		public ActionResult perform(ServerPlayer player) {
-			long now = player.serverLevel().getGameTime();
-			AbilityState.of(player).addBuff(new Buff("water_did_i_say", W, AbilityConfig.WATER_A2_OUTPUT.get(), 0, false,
-					now + AbilityConfig.WATER_A2_OUTPUT_TICKS.get()));
-			ServerPlayer target = Targeting.nearestPlayer(player);
-			if (target != null)
-				WaterEvents.launchAt(player, target);
-			WaterEvents.extinguish(player, AbilityConfig.WATER_A2_EXTINGUISH_RADIUS.get());
+			rain(player.serverLevel(), sustainTicks());
+			return ActionResult.ok("My area now. The rain answers you.");
+		}
+	}
 
-			double r = AbilityConfig.WATER_A2_NULLIFY_RADIUS.get();
-			int n = 0;
-			for (ServerPlayer t : player.serverLevel().players()) {
-				if (!Targeting.isValid(player, t) || Targeting.isAllied(player, t) || t.distanceTo(player) > r
-						|| AspectData.of(t).getActive() != AspectType.FIRE)
-					continue;
-				QiEffects.nullify(t, AspectType.FIRE, AbilityConfig.WATER_A2_NULLIFY_TICKS.get());
-				QiEffects.applyEffect(t, MobEffects.WEAKNESS, AbilityConfig.WATER_A2_WEAKNESS.get(), AbilityConfig.WATER_A2_WEAKNESS_TICKS.get(), false);
-				n++;
-			}
-			return ActionResult.ok("Did I say you can be here? 5x damage" + (n > 0 ? "; " + n + " Fire user" + (n == 1 ? "" : "s") + " doused." : "."));
+	// ------------------------------------------------------------------ Ability 2
+
+	static final class OceanicDoom extends Ability {
+		static final String FLIGHT = "water_oceanic_flight";
+
+		OceanicDoom() {
+			super(W, AbilitySlot.ABILITY_2, "OCEANIC DOOM domain expansion");
+		}
+
+		@Override
+		public Kind kind() {
+			return Kind.SUSTAINED;
+		}
+
+		@Override
+		public int sustainTicks() {
+			return seconds(WaterConfig.AB2_SECONDS.get());
+		}
+
+		@Override
+		public double baseCost(Player p) {
+			return WaterConfig.AB2_COST.get();
+		}
+
+		@Override
+		public int cooldownTicks() {
+			return seconds(WaterConfig.AB2_COOLDOWN.get());
+		}
+
+		@Override
+		public ActionResult perform(ServerPlayer player) {
+			int ticks = sustainTicks();
+			ServerLevel level = player.serverLevel();
+			int placed = level.dimensionType().ultraWarm() ? 0 : WaterEvents.flood(player, WaterConfig.AB2_FLOOD_RADIUS.get(), ticks);
+			rain(level, ticks);
+			net.zyren.cultivation.ability.core.TimedAttributes.apply(player, net.neoforged.neoforge.common.NeoForgeMod.CREATIVE_FLIGHT, FLIGHT, 1,
+					net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE, ticks);
+			EffectHelper.apply(player, MobEffects.DAMAGE_BOOST, WaterConfig.AB2_STRENGTH.get(), ticks, true);
+			AbilityState.of(player).addBuff(new Buff("water_oceanic_doom", W, 1.0, 0, false, level.getGameTime() + ticks));
+			level.playSound(null, player.blockPosition(), net.minecraft.sounds.SoundEvents.ELDER_GUARDIAN_CURSE, net.minecraft.sounds.SoundSource.PLAYERS, 3f, 0.6f);
+			return ActionResult.ok("OCEANIC DOOM. " + placed + " blocks flooded.");
+		}
+
+		@Override
+		public void onStop(ServerPlayer player) {
+			WaterEvents.endOceanicDoom(player);
 		}
 	}
 }

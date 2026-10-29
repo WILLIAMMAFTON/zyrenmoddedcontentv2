@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "group": "steel",
+  "category": "misc",
+  "experience": 1,
+  "cookingtime": 100,
+  "ingredient": {
+    "item": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "zyrenmoddedcontent_v2:steel_ingot"
+  }
+}

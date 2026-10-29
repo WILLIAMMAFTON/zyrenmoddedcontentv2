@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "steel",
+  "category": "equipment",
+  "pattern": [
+    "aaa",
+    "a a",
+    "a a"
+  ],
+  "key": {
+    "a": {
+      "item": "zyrenmoddedcontent_v2:steel_ingot"
+    }
+  },
+  "result": {
+    "id": "zyrenmoddedcontent_v2:steel_armor_leggings",
+    "count": 1
+  }
+}

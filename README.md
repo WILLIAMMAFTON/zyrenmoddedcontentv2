@@ -10,5 +10,8 @@ Qi cultivation mod for Minecraft 1.21.1 (NeoForge 21.1.232, Java 21), built as a
 Open the folder as a workspace in MCreator 2026.2 and build, or run `./gradlew build`.
 
 ## Notes
-- `PotionofCRBrewingRecipe.java` (MCreator-generated) is not in this upload; MCreator regenerates it on build.
+- Not in the repo yet (nested too deep for the upload tool; copy them in by hand if you clone fresh):
+  - `src/main/java/net/mcreator/zyrenmoddedcontentv2/recipe/brewing/PotionofCRBrewingRecipe.java` (MCreator regenerates it on build)
+  - `src/main/resources/assets/zyrenmoddedcontent_v2/textures/models/armor/` (chainmail_layer_1/2.png, iron_layer_1/2.png)
+  - `src/main/resources/data/minecraft/tags/item/enchantable/durability.json` (MCreator regenerates it on build)
 - Design docs live in the claude.ai project ("minecraft mod for 1.21.1 neoforge 21.1.232").

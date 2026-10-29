@@ -59,6 +59,11 @@ public final class AbilityService {
 		long now = player.serverLevel().getGameTime();
 		if (state.isNullified(active, now))
 			return ActionResult.fail(active.displayName() + " is nullified.");
+		ActionResult recast = ability.onRecast(player);
+		if (recast != null) {
+			state.markDirty();
+			return recast;
+		}
 		long cd = state.cooldownRemaining(ability, now);
 		if (cd > 0)
 			return ActionResult.fail(ability.name() + " is on cooldown (" + (cd + 19) / 20 + "s).");

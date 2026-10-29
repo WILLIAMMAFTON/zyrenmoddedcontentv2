@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "steel",
+  "category": "misc",
+  "pattern": [
+    "a a",
+    "aba",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "zyrenmoddedcontent_v2:qi_infused_steel"
+    },
+    "b": {
+      "item": "zyrenmoddedcontent_v2:purifying_crystal"
+    }
+  },
+  "result": {
+    "id": "zyrenmoddedcontent_v2:qiinfusedsteelarmor_chestplate",
+    "count": 1
+  }
+}

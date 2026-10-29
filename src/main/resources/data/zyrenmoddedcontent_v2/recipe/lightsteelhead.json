@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "lightsteel",
+  "category": "equipment",
+  "pattern": [
+    "aaa",
+    "b b",
+    " c "
+  ],
+  "key": {
+    "a": {
+      "item": "zyrenmoddedcontent_v2:steel_ingot"
+    },
+    "b": {
+      "item": "minecraft:leather"
+    },
+    "c": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "id": "zyrenmoddedcontent_v2:lightsteelarmor_helmet",
+    "count": 1
+  }
+}

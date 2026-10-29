@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "steel",
+  "category": "misc",
+  "pattern": [
+    "aba",
+    "c c",
+    "a a"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:leather"
+    },
+    "b": {
+      "item": "minecraft:string"
+    },
+    "c": {
+      "item": "zyrenmoddedcontent_v2:qi_infused_steel"
+    }
+  },
+  "result": {
+    "id": "zyrenmoddedcontent_v2:qiinfused_lite_steel_armor_leggings",
+    "count": 1
+  }
+}

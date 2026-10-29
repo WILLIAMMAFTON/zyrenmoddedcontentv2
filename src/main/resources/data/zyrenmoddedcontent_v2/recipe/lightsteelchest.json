@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "a a",
+    "bca",
+    " c "
+  ],
+  "key": {
+    "a": {
+      "item": "zyrenmoddedcontent_v2:steel_ingot"
+    },
+    "b": {
+      "item": "minecraft:string"
+    },
+    "c": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "id": "zyrenmoddedcontent_v2:lightsteelarmor_chestplate",
+    "count": 1
+  }
+}

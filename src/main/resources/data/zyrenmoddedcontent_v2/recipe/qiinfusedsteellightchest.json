@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "steel",
+  "category": "misc",
+  "pattern": [
+    "a a",
+    "bca",
+    " c "
+  ],
+  "key": {
+    "a": {
+      "item": "zyrenmoddedcontent_v2:qi_infused_steel"
+    },
+    "b": {
+      "item": "minecraft:string"
+    },
+    "c": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "id": "zyrenmoddedcontent_v2:qiinfused_lite_steel_armor_chestplate",
+    "count": 1
+  }
+}

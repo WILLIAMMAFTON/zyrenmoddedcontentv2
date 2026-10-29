@@ -334,6 +334,387 @@
         ]
       },
       "path": "~/test/items/books"
+    },
+    {
+      "name": "QiInfusedSteel",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qi_infused_steel",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/zyrenmoddedcontentv2/item/QiInfusedSteelItem.java",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/qi_infused_steel.json"
+        ]
+      },
+      "path": "~/test/items/recources"
+    },
+    {
+      "name": "SteelIngot",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "steel_ingot",
+      "metadata": {
+        "files": [
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/steel_ingot.json",
+          "src/main/java/net/mcreator/zyrenmoddedcontentv2/item/SteelIngotItem.java"
+        ]
+      },
+      "path": "~/test/items/recources"
+    },
+    {
+      "name": "QiInfusedMyrox",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qi_infused_myrox",
+      "metadata": {
+        "files": [
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/qi_infused_myrox.json",
+          "src/main/java/net/mcreator/zyrenmoddedcontentv2/item/QiInfusedMyroxItem.java"
+        ]
+      },
+      "path": "~/test/items/recources"
+    },
+    {
+      "name": "MyroxIngot",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "myrox_ingot",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/zyrenmoddedcontentv2/item/MyroxIngotItem.java",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/myrox_ingot.json"
+        ]
+      },
+      "path": "~/test/items/recources"
+    },
+    {
+      "name": "QiinfusedLITESteelArmor",
+      "type": "armor",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qiinfused_lite_steel_armor",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/zyrenmoddedcontentv2/item/QiinfusedLITESteelArmorItem.java",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/qiinfused_lite_steel_armor_helmet.json",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/qiinfused_lite_steel_armor_chestplate.json",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/qiinfused_lite_steel_armor_boots.json",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/qiinfused_lite_steel_armor_leggings.json"
+        ]
+      },
+      "path": "~/test/items/armor/qi infused/steel"
+    },
+    {
+      "name": "SteelArmor",
+      "type": "armor",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "steel_armor",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/zyrenmoddedcontentv2/item/SteelArmorItem.java",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/steel_armor_helmet.json",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/steel_armor_chestplate.json",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/steel_armor_boots.json",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/steel_armor_leggings.json"
+        ]
+      },
+      "path": "~/test/items/armor/steel"
+    },
+    {
+      "name": "SteelSword",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "steel_sword",
+      "metadata": {
+        "files": [
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/steel_sword.json",
+          "src/main/java/net/mcreator/zyrenmoddedcontentv2/item/SteelSwordItem.java"
+        ]
+      },
+      "path": "~/test/items/weapons/sword/steel"
+    },
+    {
+      "name": "Qiinfusedsteelarmor",
+      "type": "armor",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qiinfusedsteelarmor",
+      "metadata": {
+        "files": [
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/qiinfusedsteelarmor_chestplate.json",
+          "src/main/java/net/mcreator/zyrenmoddedcontentv2/item/QiinfusedsteelarmorItem.java",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/qiinfusedsteelarmor_leggings.json",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/qiinfusedsteelarmor_helmet.json",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/qiinfusedsteelarmor_boots.json"
+        ]
+      },
+      "path": "~/test/items/armor/qi infused/lightsteel"
+    },
+    {
+      "name": "Lightsteelarmor",
+      "type": "armor",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "lightsteelarmor",
+      "metadata": {
+        "files": [
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/lightsteelarmor_helmet.json",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/lightsteelarmor_boots.json",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/lightsteelarmor_chestplate.json",
+          "src/main/resources/assets/zyrenmoddedcontent_v2/models/item/lightsteelarmor_leggings.json",
+          "src/main/java/net/mcreator/zyrenmoddedcontentv2/item/LightsteelarmorItem.java"
+        ]
+      },
+      "path": "~/test/items/armor/light steel"
+    },
+    {
+      "name": "Leggins",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "leggins",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/leggins.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/qi infused"
+    },
+    {
+      "name": "Chestplate",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "chestplate",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/chestplate.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/qi infused"
+    },
+    {
+      "name": "Helmetsteel",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "helmetsteel",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/helmetsteel.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/qi infused"
+    },
+    {
+      "name": "Steelboot",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "steelboot",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/steelboot.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/qi infused"
+    },
+    {
+      "name": "Lightsteelhead",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "lightsteelhead",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/lightsteelhead.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/qi infused/light armor"
+    },
+    {
+      "name": "Lightsteelchest",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "lightsteelchest",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/lightsteelchest.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/qi infused/light armor"
+    },
+    {
+      "name": "Lightsteelpants",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "lightsteelpants",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/lightsteelpants.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/qi infused/light armor"
+    },
+    {
+      "name": "Lightsteelshoes",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "lightsteelshoes",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/lightsteelshoes.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/qi infused/light armor"
+    },
+    {
+      "name": "Smeltingproccesssteel",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "smeltingproccesssteel",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/smeltingproccesssteel.json",
+          "src/main/resources/data/zyrenmoddedcontent_v2/advancement/recipes/smeltingproccesssteel.json"
+        ]
+      },
+      "path": "~/test/items/recipes"
+    },
+    {
+      "name": "Qiinfusedsteelhead",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qiinfusedsteelhead",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/qiinfusedsteelhead.json",
+          "src/main/resources/data/zyrenmoddedcontent_v2/advancement/recipes/qiinfusedsteelhead.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/steel"
+    },
+    {
+      "name": "Qiinfusedsteelchest",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qiinfusedsteelchest",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/advancement/recipes/qiinfusedsteelchest.json",
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/qiinfusedsteelchest.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/steel"
+    },
+    {
+      "name": "Qiinfusedsteelpants",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qiinfusedsteelpants",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/qiinfusedsteelpants.json",
+          "src/main/resources/data/zyrenmoddedcontent_v2/advancement/recipes/qiinfusedsteelpants.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/steel"
+    },
+    {
+      "name": "Qiinfusedsteelshows",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qiinfusedsteelshows",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/advancement/recipes/qiinfusedsteelshows.json",
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/qiinfusedsteelshows.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/steel"
+    },
+    {
+      "name": "Qisteel",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qisteel",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/zyrenmoddedcontentv2/recipe/brewing/QisteelBrewingRecipe.java"
+        ]
+      },
+      "path": "~/test/items/recipes"
+    },
+    {
+      "name": "Qiinfusedsteellighthead",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qiinfusedsteellighthead",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/advancement/recipes/qiinfusedsteellighthead.json",
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/qiinfusedsteellighthead.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/steel/lightarmor"
+    },
+    {
+      "name": "Qiinfusedsteellightchest",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qiinfusedsteellightchest",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/qiinfusedsteellightchest.json",
+          "src/main/resources/data/zyrenmoddedcontent_v2/advancement/recipes/qiinfusedsteellightchest.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/steel/lightarmor"
+    },
+    {
+      "name": "Qiinfusedsteellightpants",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qiinfusedsteellightpants",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/qiinfusedsteellightpants.json",
+          "src/main/resources/data/zyrenmoddedcontent_v2/advancement/recipes/qiinfusedsteellightpants.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/steel/lightarmor"
+    },
+    {
+      "name": "Qiinfusedsteellightshows",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "qiinfusedsteellightshows",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/zyrenmoddedcontent_v2/advancement/recipes/qiinfusedsteellightshows.json",
+          "src/main/resources/data/zyrenmoddedcontent_v2/recipe/qiinfusedsteellightshows.json"
+        ]
+      },
+      "path": "~/test/items/recipes/armor/steel/lightarmor"
     }
   ],
   "variable_elements": [
@@ -570,6 +951,30 @@
   "tag_elements": {
     "ITEMS:minecraft:enchantable/durability": [
       "~PurifyingCrystal@CUSTOM:PurifyingCrystal"
+    ],
+    "ITEMS:minecraft:head_armor": [
+      "~Lightsteelarmor@CUSTOM:Lightsteelarmor.helmet",
+      "~Qiinfusedsteelarmor@CUSTOM:Qiinfusedsteelarmor.helmet",
+      "~QiinfusedLITESteelArmor@CUSTOM:QiinfusedLITESteelArmor.helmet",
+      "~SteelArmor@CUSTOM:SteelArmor.helmet"
+    ],
+    "ITEMS:minecraft:chest_armor": [
+      "~Lightsteelarmor@CUSTOM:Lightsteelarmor.body",
+      "~Qiinfusedsteelarmor@CUSTOM:Qiinfusedsteelarmor.body",
+      "~QiinfusedLITESteelArmor@CUSTOM:QiinfusedLITESteelArmor.body",
+      "~SteelArmor@CUSTOM:SteelArmor.body"
+    ],
+    "ITEMS:minecraft:leg_armor": [
+      "~Lightsteelarmor@CUSTOM:Lightsteelarmor.legs",
+      "~Qiinfusedsteelarmor@CUSTOM:Qiinfusedsteelarmor.legs",
+      "~QiinfusedLITESteelArmor@CUSTOM:QiinfusedLITESteelArmor.legs",
+      "~SteelArmor@CUSTOM:SteelArmor.legs"
+    ],
+    "ITEMS:minecraft:foot_armor": [
+      "~Lightsteelarmor@CUSTOM:Lightsteelarmor.boots",
+      "~Qiinfusedsteelarmor@CUSTOM:Qiinfusedsteelarmor.boots",
+      "~QiinfusedLITESteelArmor@CUSTOM:QiinfusedLITESteelArmor.boots",
+      "~SteelArmor@CUSTOM:SteelArmor.boots"
     ]
   },
   "tab_element_order": {},
@@ -622,7 +1027,28 @@
       "item.minecraft.tipped_arrow.effect.potion_of_weaknessfake": "Arrow of Potion Of Cultivation",
       "effect.zyrenmoddedcontent_v2.sickeningwarmth": "Sickening Warmth",
       "item.zyrenmoddedcontent_v2.aspect_tome": "Aspect Tomes",
-      "item.zyrenmoddedcontent_v2.sub_aspect_book": "Subaspect technique book"
+      "item.zyrenmoddedcontent_v2.sub_aspect_book": "Subaspect technique book",
+      "item.zyrenmoddedcontent_v2.qi_infused_steel": "Qi Infused Steel",
+      "item.zyrenmoddedcontent_v2.steel_ingot": "Steel Ingot",
+      "item.zyrenmoddedcontent_v2.qi_infused_myrox": "Qi Infused Myrox",
+      "item.zyrenmoddedcontent_v2.myrox_ingot": "Myrox Ingot",
+      "item.zyrenmoddedcontent_v2.qiinfused_lite_steel_armor_chestplate": "Qiinfused LITE Steel Armor Chestplate",
+      "item.zyrenmoddedcontent_v2.qiinfused_lite_steel_armor_leggings": "Qiinfused LITE Steel Armor Leggings",
+      "item.zyrenmoddedcontent_v2.qiinfused_lite_steel_armor_boots": "Qiinfused LITE Steel Armor Boots",
+      "item.zyrenmoddedcontent_v2.qiinfused_lite_steel_armor_helmet": "Qiinfused LITE Steel Armor Helmet",
+      "item.zyrenmoddedcontent_v2.steel_armor_boots": "Steel Armor Boots",
+      "item.zyrenmoddedcontent_v2.steel_armor_leggings": "Steel Armor Leggings",
+      "item.zyrenmoddedcontent_v2.steel_armor_helmet": "Steel Armor Helmet",
+      "item.zyrenmoddedcontent_v2.steel_armor_chestplate": "Steel Armor Chestplate",
+      "item.zyrenmoddedcontent_v2.steel_sword": "Steel Sword",
+      "item.zyrenmoddedcontent_v2.qiinfusedsteelarmor_helmet": "Qi steel Helmet",
+      "item.zyrenmoddedcontent_v2.qiinfusedsteelarmor_leggings": "Qi steel Leggings",
+      "item.zyrenmoddedcontent_v2.qiinfusedsteelarmor_boots": "Qi steel Boots",
+      "item.zyrenmoddedcontent_v2.qiinfusedsteelarmor_chestplate": "Qi steel Chestplate",
+      "item.zyrenmoddedcontent_v2.lightsteelarmor_boots": "Light steel Boots",
+      "item.zyrenmoddedcontent_v2.lightsteelarmor_helmet": "Light steel Helmet",
+      "item.zyrenmoddedcontent_v2.lightsteelarmor_chestplate": "Light steel Chestplate",
+      "item.zyrenmoddedcontent_v2.lightsteelarmor_leggings": "Light steel Leggings"
     }
   },
   "metadata": {
@@ -727,18 +1153,82 @@
               },
               {
                 "name": "recipes",
-                "children": []
+                "children": [
+                  {
+                    "name": "armor",
+                    "children": [
+                      {
+                        "name": "qi infused",
+                        "children": [
+                          {
+                            "name": "light armor",
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "steel",
+                        "children": [
+                          {
+                            "name": "lightarmor",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "name": "weapons",
-                "children": []
+                "children": [
+                  {
+                    "name": "sword",
+                    "children": [
+                      {
+                        "name": "mryox",
+                        "children": []
+                      },
+                      {
+                        "name": "steel",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "name": "armor",
-                "children": []
+                "children": [
+                  {
+                    "name": "qi infused",
+                    "children": [
+                      {
+                        "name": "steel",
+                        "children": []
+                      },
+                      {
+                        "name": "lightsteel",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "steel",
+                    "children": []
+                  },
+                  {
+                    "name": "light steel",
+                    "children": []
+                  }
+                ]
               },
               {
                 "name": "books",
+                "children": []
+              },
+              {
+                "name": "recources",
                 "children": []
               }
             ]

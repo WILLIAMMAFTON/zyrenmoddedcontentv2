@@ -1,0 +1,31 @@
+{
+  "_fv": 89,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "recipeRetstackSize": 1,
+    "group": "steel",
+    "unlockingItems": [
+      "CUSTOM:QiInfusedSteel"
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "recipeSlots": [
+      "CUSTOM:QiInfusedSteel",
+      "",
+      "CUSTOM:QiInfusedSteel",
+      "CUSTOM:QiInfusedSteel",
+      "CUSTOM:PurifyingCrystal",
+      "CUSTOM:QiInfusedSteel",
+      "CUSTOM:QiInfusedSteel",
+      "CUSTOM:QiInfusedSteel",
+      "CUSTOM:QiInfusedSteel"
+    ],
+    "recipeReturnStack": "CUSTOM:Qiinfusedsteelarmor.body",
+    "name": "qiinfusedsteelchest",
+    "namespace": "mod"
+  }
+}

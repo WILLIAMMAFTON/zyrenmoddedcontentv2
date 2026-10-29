@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "steel",
+  "category": "equipment",
+  "pattern": [
+    "a a",
+    "b b"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:leather"
+    },
+    "b": {
+      "item": "zyrenmoddedcontent_v2:steel_ingot"
+    }
+  },
+  "result": {
+    "id": "zyrenmoddedcontent_v2:steel_armor_boots",
+    "count": 1
+  }
+}

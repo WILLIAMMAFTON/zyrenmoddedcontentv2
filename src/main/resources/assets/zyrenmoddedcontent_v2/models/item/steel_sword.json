@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "zyrenmoddedcontent_v2:item/iron_sword"
+  }
+}

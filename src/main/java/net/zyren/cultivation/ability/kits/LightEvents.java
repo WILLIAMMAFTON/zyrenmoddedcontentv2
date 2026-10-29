@@ -50,6 +50,12 @@ public final class LightEvents {
 
 	// ------------------------------------------------------------------ Heavy: reveal
 
+	/** True while this player's Light Heavy reveal runs (Water Moon's aspect sight then stays quiet). */
+	public static boolean isRevealing(ServerPlayer player) {
+		Long until = REVEAL_UNTIL.get(player.getUUID());
+		return until != null && player.serverLevel().getGameTime() < until;
+	}
+
 	static void startReveal(ServerPlayer player, int ticks) {
 		REVEAL_UNTIL.put(player.getUUID(), player.serverLevel().getGameTime() + ticks);
 		sendReveal(player);

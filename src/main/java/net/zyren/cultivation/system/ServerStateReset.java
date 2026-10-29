@@ -41,6 +41,7 @@ public final class ServerStateReset {
 		FireEvents.resetAll();
 		ProtectiveEvents.resetAll();
 		WaterEvents.resetAll();
+		net.zyren.cultivation.ability.kits.WaterSubEvents.resetAll();
 		EarthEvents.resetAll();
 		PhysicalEvents.resetAll();
 		LightEvents.resetAll();
