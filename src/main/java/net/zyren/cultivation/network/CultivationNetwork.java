@@ -19,7 +19,7 @@ import net.zyren.cultivation.system.ActionResult;
  */
 @EventBusSubscriber(modid = "zyrenmoddedcontent_v2")
 public final class CultivationNetwork {
-	private static final String PROTOCOL_VERSION = "11"; // 11: Air + Space aspects (aspect arrays changed size)
+	private static final String PROTOCOL_VERSION = "12"; // 12: target-pick packets (Air -> Sky)
 
 	private CultivationNetwork() {
 	}
@@ -36,6 +36,7 @@ public final class CultivationNetwork {
 		r.playToServer(DeathChoiceRequest.TYPE, DeathChoiceRequest.STREAM_CODEC, DeathChoiceRequest::handle);
 		r.playToServer(ToggleFormRequest.TYPE, ToggleFormRequest.STREAM_CODEC, ToggleFormRequest::handle);
 		r.playToServer(EquipSubAspectRequest.TYPE, EquipSubAspectRequest.STREAM_CODEC, EquipSubAspectRequest::handle);
+		r.playToServer(PickTargetRequest.TYPE, PickTargetRequest.STREAM_CODEC, PickTargetRequest::handle);
 		// server -> client
 		r.playToClient(SwitchStatusMessage.TYPE, SwitchStatusMessage.STREAM_CODEC, SwitchStatusMessage::handle);
 		r.playToClient(FeedbackMessage.TYPE, FeedbackMessage.STREAM_CODEC, FeedbackMessage::handle);
@@ -44,6 +45,7 @@ public final class CultivationNetwork {
 		r.playToClient(CorruptionStatusMessage.TYPE, CorruptionStatusMessage.STREAM_CODEC, CorruptionStatusMessage::handle);
 		r.playToClient(DeathChoiceMessage.TYPE, DeathChoiceMessage.STREAM_CODEC, DeathChoiceMessage::handle);
 		r.playToClient(SensedPlayersMessage.TYPE, SensedPlayersMessage.STREAM_CODEC, SensedPlayersMessage::handle);
+		r.playToClient(TargetPickMessage.TYPE, TargetPickMessage.STREAM_CODEC, TargetPickMessage::handle);
 	}
 
 	public static void sendStatus(ServerPlayer player, SwitchStatusMessage msg) {

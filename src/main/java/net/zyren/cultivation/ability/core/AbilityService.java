@@ -36,6 +36,19 @@ public final class AbilityService {
 	}
 
 	public static ActionResult use(ServerPlayer player, AbilitySlot slot) {
+		return use(player, slot, false);
+	}
+
+	/**
+	 * Uses an ability WITHOUT paying Qi (e.g. Air -> Storm "Cat 5 storm" casting an ally's ability for
+	 * free). Every other rule still applies: unlocked, not nullified, off cooldown (and the cooldown
+	 * starts), the ability's own checks.
+	 */
+	public static ActionResult useFree(ServerPlayer player, AbilitySlot slot) {
+		return use(player, slot, true);
+	}
+
+	private static ActionResult use(ServerPlayer player, AbilitySlot slot, boolean free) {
 		if (slot == null)
 			return ActionResult.fail("Unknown ability.");
 		if (!player.isAlive() || player.isSpectator())
@@ -80,10 +93,10 @@ public final class AbilityService {
 		double base = ability.baseCost(player);
 		if (base < 0)
 			return ActionResult.fail(ability.name() + " is not finalized (cost).");
-		double cost = QiCosts.effective(player, base);
+		double cost = free ? 0 : QiCosts.effective(player, base);
 		if (ability.costCappedAtCurrentQi())
 			cost = Math.min(cost, QiData.of(player).getCoreAmount());
-		if (!QiCoreStorage.trySpendQi(player, cost)) {
+		if (!free && !QiCoreStorage.trySpendQi(player, cost)) {
 			// Emergency Core Breakdown (Ability 1 / Ability 2 only, toggle ON): restores Qi, then retry.
 			// Ability 1/2 slots incl. the Ultimate (user 2026-10-08: ultimates sit in the ability 1/2 positions).
 			// Only abilities marked "can break core on use" (default: the Ability 1/2 slots).
@@ -112,11 +125,12 @@ public final class AbilityService {
 			}
 		}
 		ActionResult result;
+		Ability outer = performing; // an ability may cast another player's ability (nested)
 		performing = ability;
 		try {
 			result = ability.perform(player);
 		} finally {
-			performing = null;
+			performing = outer;
 		}
 		net.zyren.cultivation.system.CultivationAdvancements.onAbilityUsed(player, ability.aspect());
 		state.markDirty();

@@ -32,7 +32,6 @@ import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import net.zyren.cultivation.ability.core.AbilityState;
 import net.zyren.cultivation.ability.core.Buff;
@@ -102,101 +101,21 @@ public final class WaterEvents {
 			event.setCanceled(true);
 	}
 
-	// ================================================================== pushes and pulls
-
-	private static final class Motion {
-		LivingEntity entity;
-		Vec3 dir; // push direction (horizontal)
-		Vec3 point; // pull: fixed point, or ...
-		Entity anchor; // ... toward this entity
-		boolean pull;
-		double distance, travelled, speed;
-		Vec3 last;
-		int ticks, maxTicks, stuck;
-	}
-
-	private static final Map<UUID, Motion> MOTIONS = new HashMap<>();
+	// ================================================================== pushes and pulls (shared core Motion)
 
 	/** Throw {@code target} horizontally away from {@code from} for about {@code blocks}. */
 	static void push(LivingEntity target, Vec3 from, double blocks) {
-		if (blocks <= 0)
-			return;
-		Vec3 dir = target.position().subtract(from).multiply(1, 0, 1);
-		if (dir.lengthSqr() < 1.0E-4)
-			dir = new Vec3(1, 0, 0);
-		Motion m = new Motion();
-		m.entity = target;
-		m.dir = dir.normalize();
-		m.distance = blocks;
-		m.speed = WaterConfig.PUSH_SPEED.get();
-		start(m);
+		net.zyren.cultivation.ability.core.Motion.push(target, from, blocks, WaterConfig.PUSH_SPEED.get(), 0, null);
 	}
 
 	/** Drag {@code target} up to {@code blocks} toward {@code anchor} (stops next to it, or at a solid block). */
 	static void pullToward(LivingEntity target, Entity anchor, double blocks) {
-		pull(target, anchor, null, blocks);
+		net.zyren.cultivation.ability.core.Motion.pullToward(target, anchor, blocks, WaterConfig.PULL_SPEED.get());
 	}
 
 	/** Drag {@code target} up to {@code blocks} toward a fixed point. */
 	static void pullToward(LivingEntity target, Vec3 point, double blocks) {
-		pull(target, null, point, blocks);
-	}
-
-	private static void pull(LivingEntity target, Entity anchor, Vec3 point, double blocks) {
-		if (blocks <= 0)
-			return;
-		Motion m = new Motion();
-		m.entity = target;
-		m.pull = true;
-		m.anchor = anchor;
-		m.point = point;
-		m.distance = blocks;
-		m.speed = WaterConfig.PULL_SPEED.get();
-		start(m);
-	}
-
-	private static void start(Motion m) {
-		m.last = m.entity.position();
-		m.maxTicks = (int) Math.ceil(m.distance / m.speed) + 10;
-		MOTIONS.put(m.entity.getUUID(), m);
-	}
-
-	/** @return true when finished */
-	private static boolean tickMotion(Motion m) {
-		LivingEntity e = m.entity;
-		if (!e.isAlive() || e.isRemoved() || m.ticks++ > m.maxTicks)
-			return true;
-		Vec3 pos = e.position();
-		double moved = pos.subtract(m.last).multiply(1, 0, 1).length();
-		m.last = pos;
-		if (m.ticks > 2) {
-			m.travelled += moved;
-			m.stuck = moved < m.speed * 0.25 ? m.stuck + 1 : 0;
-		}
-		Vec3 dir = m.dir;
-		if (m.pull) {
-			Vec3 to = m.anchor != null ? m.anchor.position() : m.point;
-			if (to == null || m.anchor != null && (!m.anchor.isAlive() || m.anchor.level() != e.level()))
-				return stop(e);
-			Vec3 d = to.subtract(pos).multiply(1, 0, 1);
-			if (d.length() <= 1.3)
-				return stop(e);
-			dir = d.normalize();
-		}
-		if (m.travelled >= m.distance || m.stuck >= 2) // done, or a solid block is in the way
-			return stop(e);
-		double y = m.pull ? Math.min(e.getDeltaMovement().y, 0.1) : (m.ticks == 1 ? 0.4 : Math.max(e.getDeltaMovement().y, 0.05));
-		e.setDeltaMovement(dir.x * m.speed, y, dir.z * m.speed);
-		e.hurtMarked = true;
-		e.fallDistance = 0;
-		return false;
-	}
-
-	private static boolean stop(LivingEntity e) {
-		Vec3 v = e.getDeltaMovement();
-		e.setDeltaMovement(0, Math.min(v.y, 0), 0);
-		e.hurtMarked = true;
-		return true;
+		net.zyren.cultivation.ability.core.Motion.pullToward(target, point, blocks, WaterConfig.PULL_SPEED.get());
 	}
 
 	// ================================================================== temporary floods
@@ -492,12 +411,6 @@ public final class WaterEvents {
 	}
 
 	@SubscribeEvent
-	public static void onServerTick(ServerTickEvent.Post event) {
-		if (!MOTIONS.isEmpty())
-			MOTIONS.values().removeIf(WaterEvents::tickMotion);
-	}
-
-	@SubscribeEvent
 	public static void onLevelTick(LevelTickEvent.Post event) {
 		if (!(event.getLevel() instanceof ServerLevel level) || FLOODS.isEmpty())
 			return;
@@ -516,14 +429,12 @@ public final class WaterEvents {
 		FIST_CHARGES.remove(id);
 		SEEKS.remove(id);
 		DOOMED.remove(id);
-		MOTIONS.remove(id);
 		PASSIVE_ON.remove(id);
 		PASSIVE_LOCK.remove(id);
 	}
 
 	@SubscribeEvent
 	public static void onDeath(LivingDeathEvent event) {
-		MOTIONS.remove(event.getEntity().getUUID());
 		if (event.getEntity() instanceof ServerPlayer p)
 			clear(p.getUUID());
 	}
@@ -538,7 +449,6 @@ public final class WaterEvents {
 		FIST_CHARGES.clear();
 		SEEKS.clear();
 		DOOMED.clear();
-		MOTIONS.clear();
 		PASSIVE_ON.clear();
 		PASSIVE_LOCK.clear();
 		FLOODS.clear();

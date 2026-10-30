@@ -34,6 +34,8 @@ public final class ServerStateReset {
 		AbilityState.resetAll();
 		net.zyren.cultivation.ability.core.EffectHelper.resetAll();
 		Stun.resetAll();
+		net.zyren.cultivation.ability.core.Motion.resetAll();
+		net.zyren.cultivation.ability.core.Suffocation.resetAll();
 		TimedAttributes.resetAll();
 		Thorns.resetAll();
 		LightningEvents.resetAll();
@@ -42,6 +44,8 @@ public final class ServerStateReset {
 		ProtectiveEvents.resetAll();
 		WaterEvents.resetAll();
 		net.zyren.cultivation.ability.kits.WaterSubEvents.resetAll();
+		net.zyren.cultivation.ability.kits.AirEvents.resetAll();
+		net.zyren.cultivation.ability.kits.AirSubEvents.resetAll();
 		EarthEvents.resetAll();
 		PhysicalEvents.resetAll();
 		LightEvents.resetAll();

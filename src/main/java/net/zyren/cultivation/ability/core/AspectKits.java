@@ -39,6 +39,7 @@ public final class AspectKits {
 		register(PureKit.create());
 		register(ProtectiveKit.create());
 		register(WaterKit.create());
+		register(net.zyren.cultivation.ability.kits.AirKit.create());
 	}
 
 	private static void register(AspectKit kit) {

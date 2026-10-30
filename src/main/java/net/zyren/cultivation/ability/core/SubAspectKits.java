@@ -26,6 +26,9 @@ public final class SubAspectKits {
 		register(net.zyren.cultivation.ability.kits.WaterSubKits.freezing());
 		register(net.zyren.cultivation.ability.kits.WaterSubKits.body());
 		register(net.zyren.cultivation.ability.kits.WaterSubKits.moon());
+		register(net.zyren.cultivation.ability.kits.AirSubKits.sky());
+		register(net.zyren.cultivation.ability.kits.AirSubKits.storm());
+		register(net.zyren.cultivation.ability.kits.AirSubKits.gale());
 	}
 
 	private static void register(SubAspectKit kit) {
