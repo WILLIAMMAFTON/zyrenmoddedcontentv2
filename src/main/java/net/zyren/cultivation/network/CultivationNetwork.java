@@ -19,7 +19,7 @@ import net.zyren.cultivation.system.ActionResult;
  */
 @EventBusSubscriber(modid = "zyrenmoddedcontent_v2")
 public final class CultivationNetwork {
-	private static final String PROTOCOL_VERSION = "12"; // 12: target-pick packets (Air -> Sky)
+	private static final String PROTOCOL_VERSION = "13"; // 13: receptor mode switch (Electric -> Enhanced Receptors)
 
 	private CultivationNetwork() {
 	}
@@ -37,6 +37,7 @@ public final class CultivationNetwork {
 		r.playToServer(ToggleFormRequest.TYPE, ToggleFormRequest.STREAM_CODEC, ToggleFormRequest::handle);
 		r.playToServer(EquipSubAspectRequest.TYPE, EquipSubAspectRequest.STREAM_CODEC, EquipSubAspectRequest::handle);
 		r.playToServer(PickTargetRequest.TYPE, PickTargetRequest.STREAM_CODEC, PickTargetRequest::handle);
+		r.playToServer(SwitchModeRequest.TYPE, SwitchModeRequest.STREAM_CODEC, SwitchModeRequest::handle);
 		// server -> client
 		r.playToClient(SwitchStatusMessage.TYPE, SwitchStatusMessage.STREAM_CODEC, SwitchStatusMessage::handle);
 		r.playToClient(FeedbackMessage.TYPE, FeedbackMessage.STREAM_CODEC, FeedbackMessage::handle);

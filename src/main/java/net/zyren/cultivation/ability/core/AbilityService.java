@@ -26,7 +26,8 @@ public final class AbilityService {
 	/** The ability whose perform() is running right now (server thread), else null. Lets buffs remember their origin. */
 	private static Ability performing;
 
-	static Ability performing() {
+	/** Public so incoming-damage handlers can tell which ability is hitting them (Electric automatic defense). */
+	public static Ability performing() {
 		return performing;
 	}
 

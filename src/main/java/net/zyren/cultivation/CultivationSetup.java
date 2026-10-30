@@ -37,6 +37,7 @@ public final class CultivationSetup {
 		ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, net.zyren.cultivation.config.FireConfig.SPEC, "zyrenmoddedcontent_v2-fire-server.toml");
 		ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, net.zyren.cultivation.config.WaterConfig.SPEC, "zyrenmoddedcontent_v2-water-server.toml");
 		ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, net.zyren.cultivation.config.AirConfig.SPEC, "zyrenmoddedcontent_v2-air-server.toml");
+		ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, net.zyren.cultivation.config.ElectricConfig.SPEC, "zyrenmoddedcontent_v2-electric-server.toml");
 		// COMMON config: loaded at game start (loot tables are built before server configs load).
 		ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, net.zyren.cultivation.config.LootConfig.SPEC, "zyrenmoddedcontent_v2-loot-common.toml");
 		AspectKits.bootstrap();

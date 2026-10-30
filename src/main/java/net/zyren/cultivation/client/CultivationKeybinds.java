@@ -28,6 +28,8 @@ public final class CultivationKeybinds {
 	public static final KeyMapping ABILITY_WHEEL = new KeyMapping("Ability Wheel (hold)", InputConstants.KEY_R, "Cultivation");
 	/** Normal form <-> equipped sub-aspect form. Instant; the server checks everything (cooldown, unlock, ...). */
 	public static final KeyMapping TOGGLE_FORM = new KeyMapping("Toggle Sub-aspect Form", InputConstants.KEY_G, "Cultivation");
+	/** Electric -> Enhanced Receptors passive mode 1 <-> 2. Guide said F, but F is vanilla "swap offhand" (user rec 2026-10-29: V). */
+	public static final KeyMapping SWITCH_MODE = new KeyMapping("Switch Receptor Mode", InputConstants.KEY_V, "Cultivation");
 
 	private CultivationKeybinds() {
 	}
@@ -37,6 +39,7 @@ public final class CultivationKeybinds {
 		event.register(OPEN_MENU);
 		event.register(ABILITY_WHEEL);
 		event.register(TOGGLE_FORM);
+		event.register(SWITCH_MODE);
 	}
 
 	@SubscribeEvent
@@ -64,6 +67,11 @@ public final class CultivationKeybinds {
 			if (mc.player == null || mc.screen != null)
 				continue;
 			net.neoforged.neoforge.network.PacketDistributor.sendToServer(net.zyren.cultivation.network.ToggleFormRequest.INSTANCE);
+		}
+		while (SWITCH_MODE.consumeClick()) {
+			if (mc.player == null || mc.screen != null)
+				continue;
+			net.neoforged.neoforge.network.PacketDistributor.sendToServer(net.zyren.cultivation.network.SwitchModeRequest.INSTANCE);
 		}
 	}
 

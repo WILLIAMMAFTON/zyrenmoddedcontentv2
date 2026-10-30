@@ -29,6 +29,9 @@ public final class SubAspectKits {
 		register(net.zyren.cultivation.ability.kits.AirSubKits.sky());
 		register(net.zyren.cultivation.ability.kits.AirSubKits.storm());
 		register(net.zyren.cultivation.ability.kits.AirSubKits.gale());
+		register(net.zyren.cultivation.ability.kits.ElectricSubKits.plasma());
+		register(net.zyren.cultivation.ability.kits.ElectricSubKits.receptors());
+		register(net.zyren.cultivation.ability.kits.ElectricSubKits.chaos());
 	}
 
 	private static void register(SubAspectKit kit) {

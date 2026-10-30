@@ -33,7 +33,8 @@ public final class AspectKits {
 		register(PhysicalKit.create());
 		register(DarkKit.create());
 		register(EarthKit.create());
-		register(LightningKit.create());
+		// Electric DEFAULT kit (2026-10-29) replaces the old Lightning kit (file kept: Reinforce + strike helpers are reused).
+		register(net.zyren.cultivation.ability.kits.ElectricKit.create());
 		register(FireKit.create());
 		register(LightKit.create());
 		register(PureKit.create());

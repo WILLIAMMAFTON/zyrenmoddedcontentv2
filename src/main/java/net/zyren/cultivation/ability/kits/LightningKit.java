@@ -69,7 +69,9 @@ public final class LightningKit {
 	/** Is Storm Conduit active for this player? Works on both sides (client uses the synced flag). */
 	static boolean passiveOn(Player p) {
 		if (p instanceof ServerPlayer sp)
-			return AbilityState.of(sp).passiveActive() && AspectData.of(sp).getActive() == L;
+			// Only the OLD Storm Conduit passive (its lethal save etc. must not fire for the new Electric kit's passive).
+			return AbilityState.of(sp).passiveActive() && AspectData.of(sp).getActive() == L
+					&& net.zyren.cultivation.ability.core.KitResolver.passiveFor(sp) instanceof Passive;
 		return ClientAbilityState.passiveActive();
 	}
 
