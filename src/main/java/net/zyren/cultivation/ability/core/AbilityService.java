@@ -78,7 +78,13 @@ public final class AbilityService {
 			state.markDirty();
 			return recast;
 		}
-		long cd = state.cooldownRemaining(ability, now);
+		ActionResult refused = CastRules.refuse(player, ability, now);
+		if (refused != null)
+			return refused;
+		boolean ruleFree = CastRules.free(player, ability, now); // e.g. Physical "enhanced reflexes": no cost, no cooldown
+		if (ruleFree)
+			free = true;
+		long cd = ruleFree ? 0 : state.cooldownRemaining(ability, now);
 		if (cd > 0)
 			return ActionResult.fail(ability.name() + " is on cooldown (" + (cd + 19) / 20 + "s).");
 
@@ -117,7 +123,7 @@ public final class AbilityService {
 
 		state.recordPaid(cost);
 		net.zyren.cultivation.system.AspectMastery.onQiSpent(player, ability.aspect(), cost);
-		state.startCooldown(ability, now, ability.cooldownTicks());
+		state.startCooldown(ability, now, ruleFree ? 0 : ability.cooldownTicks());
 		switch (ability.kind()) {
 			case EMPOWER -> state.arm(ability, now, AbilityConfig.EMPOWER_WINDOW_TICKS.get());
 			case SUSTAINED -> state.startSustained(ability, now + ability.sustainTicks());
@@ -133,6 +139,7 @@ public final class AbilityService {
 		} finally {
 			performing = outer;
 		}
+		CastRules.used(player, ability, now);
 		net.zyren.cultivation.system.CultivationAdvancements.onAbilityUsed(player, ability.aspect());
 		state.markDirty();
 		return result;

@@ -50,7 +50,7 @@ public enum SubAspectType {
 
 	PHYSICAL_WARRIOR(AspectType.PHYSICAL, "Warrior"),
 	PHYSICAL_BODY(AspectType.PHYSICAL, "Body"),
-	PHYSICAL_MIND(AspectType.PHYSICAL, "Mind"),
+	PHYSICAL_INSTINCT(AspectType.PHYSICAL, "Instinct"), // was PHYSICAL_MIND (guide 2026-11: Mind replaced by Instinct); old id still parses
 
 	PURE_RESISTANCE(AspectType.PURE, "Resistance"),
 	PURE_ENHANCEMENTS(AspectType.PURE, "Enhancements"),
@@ -132,6 +132,8 @@ public enum SubAspectType {
 		String cleaned = id.replace("\"", "").trim().toUpperCase(Locale.ROOT);
 		if (cleaned.isEmpty())
 			return null;
+		if (cleaned.equals("PHYSICAL_MIND"))
+			return PHYSICAL_INSTINCT; // renamed 2026-11-06: saves holding the old id get Instinct
 		try {
 			return valueOf(cleaned);
 		} catch (IllegalArgumentException e) {

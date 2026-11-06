@@ -7,7 +7,6 @@ import net.zyren.cultivation.ability.kits.LightKit;
 import net.zyren.cultivation.ability.kits.PureKit;
 import net.zyren.cultivation.ability.kits.ProtectiveKit;
 import net.zyren.cultivation.ability.kits.WaterKit;
-import net.zyren.cultivation.ability.kits.PhysicalKit;
 import net.zyren.cultivation.data.AspectType;
 
 import java.util.EnumMap;
@@ -29,7 +28,8 @@ public final class AspectKits {
 			return;
 		bootstrapped = true;
 		// Warrior is now the sub-aspect Physical -> Warrior (2026-10-27); its old kit is no longer registered.
-		register(PhysicalKit.create());
+		// Physical DEFAULT kit (2026-11-06) replaces the old Physical kit (file kept: its Reinforce is reused).
+		register(net.zyren.cultivation.ability.kits.PhysicalDefaultKit.create());
 		register(DarkKit.create());
 		// Earth DEFAULT kit (2026-11-05) replaces the old Earth kit (file kept: Reinforce + helpers are reused).
 		register(net.zyren.cultivation.ability.kits.EarthDefaultKit.create());

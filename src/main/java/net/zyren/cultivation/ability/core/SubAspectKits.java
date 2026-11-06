@@ -35,6 +35,9 @@ public final class SubAspectKits {
 		register(net.zyren.cultivation.ability.kits.EarthSubKits.magma());
 		register(net.zyren.cultivation.ability.kits.EarthSubKits.sand());
 		register(net.zyren.cultivation.ability.kits.EarthSubKits.nature());
+		register(net.zyren.cultivation.ability.kits.PhysicalSubKits.warrior());
+		register(net.zyren.cultivation.ability.kits.PhysicalSubKits.body());
+		register(net.zyren.cultivation.ability.kits.PhysicalSubKits.instinct());
 	}
 
 	private static void register(SubAspectKit kit) {

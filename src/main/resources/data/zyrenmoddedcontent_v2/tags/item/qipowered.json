@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    { "id": "zyrenmoddedcontent_v2:qiinfusedsteelarmor_helmet", "required": false },
+    { "id": "zyrenmoddedcontent_v2:qiinfusedsteelarmor_chestplate", "required": false },
+    { "id": "zyrenmoddedcontent_v2:qiinfusedsteelarmor_leggings", "required": false },
+    { "id": "zyrenmoddedcontent_v2:qiinfusedsteelarmor_boots", "required": false },
+    { "id": "zyrenmoddedcontent_v2:qiinfused_lite_steel_armor_helmet", "required": false },
+    { "id": "zyrenmoddedcontent_v2:qiinfused_lite_steel_armor_chestplate", "required": false },
+    { "id": "zyrenmoddedcontent_v2:qiinfused_lite_steel_armor_leggings", "required": false },
+    { "id": "zyrenmoddedcontent_v2:qiinfused_lite_steel_armor_boots", "required": false }
+  ]
+}

@@ -23,7 +23,8 @@ public final class Targeting {
 	}
 
 	public static boolean isValid(ServerPlayer user, ServerPlayer other) {
-		return other != null && other != user && other.isAlive() && !other.isSpectator() && other.level() == user.level();
+		return other != null && other != user && other.isAlive() && !other.isSpectator() && other.level() == user.level()
+				&& !CastRules.hiddenFromTargeting(other); // e.g. Physical -> Warrior sidestep
 	}
 
 	/** Nearest valid player in the same dimension (no range limit in the document), or null. */
