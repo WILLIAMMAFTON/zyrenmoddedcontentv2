@@ -48,6 +48,8 @@ public final class ServerStateReset {
 		net.zyren.cultivation.ability.kits.AirSubEvents.resetAll();
 		net.zyren.cultivation.ability.kits.ElectricEvents.resetAll();
 		EarthEvents.resetAll();
+		net.zyren.cultivation.ability.kits.EarthKitEvents.resetAll();
+		net.zyren.cultivation.ability.kits.EarthWorld.resetAll();
 		PhysicalEvents.resetAll();
 		LightEvents.resetAll();
 		CorruptionEvents.resetAll();

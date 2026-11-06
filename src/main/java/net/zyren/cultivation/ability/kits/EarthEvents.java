@@ -26,10 +26,12 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import net.zyren.cultivation.ability.core.AbilityState;
 import net.zyren.cultivation.ability.core.EffectHelper;
+import net.zyren.cultivation.ability.core.KitResolver;
 import net.zyren.cultivation.ability.core.QiEffects;
 import net.zyren.cultivation.ability.core.Stun;
 import net.zyren.cultivation.ability.core.Targeting;
 import net.zyren.cultivation.config.AbilityConfig;
+import net.zyren.cultivation.config.EarthConfig;
 import net.zyren.cultivation.data.AspectData;
 import net.zyren.cultivation.data.AspectType;
 
@@ -40,7 +42,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Earth's world interactions: Fortune III drops, wall-impact and stone-contact watches,
+ * Earth's world interactions: passive Fortune drops (old passive or the new DEFAULT one), wall-impact and stone-contact watches,
  * Powerblast 2 shaking and the delayed stone launch, Resistance XV on stone during Reinforce.
  */
 @EventBusSubscriber(modid = "zyrenmoddedcontent_v2")
@@ -76,6 +78,16 @@ public final class EarthEvents {
 			return;
 		if (AspectData.of(player).getActive() != AspectType.EARTH || !AbilityState.of(player).passiveActive())
 			return;
+		// Old Earth passive (kit no longer registered): Fortune from abilities.toml. New DEFAULT passive: Fortune II on stone / dirt.
+		int wanted;
+		if (KitResolver.passiveFor(player) instanceof EarthKit.Passive)
+			wanted = AbilityConfig.EARTH_PASSIVE_FORTUNE.get();
+		else if (EarthDefaultKit.groundBonus(player))
+			wanted = EarthConfig.PASSIVE_FORTUNE.get();
+		else
+			return;
+		if (wanted <= 0)
+			return;
 		ItemStack tool = event.getTool();
 		if (tool.isEmpty())
 			return;
@@ -83,7 +95,6 @@ public final class EarthEvents {
 		var enchantments = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
 		Holder<Enchantment> fortune = enchantments.getHolderOrThrow(Enchantments.FORTUNE);
 		Holder<Enchantment> silk = enchantments.getHolderOrThrow(Enchantments.SILK_TOUCH);
-		int wanted = AbilityConfig.EARTH_PASSIVE_FORTUNE.get();
 		if (tool.getEnchantmentLevel(silk) > 0 || tool.getEnchantmentLevel(fortune) >= wanted)
 			return;
 

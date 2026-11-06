@@ -1,7 +1,6 @@
 package net.zyren.cultivation.ability.core;
 
 import net.zyren.cultivation.ability.kits.DarkKit;
-import net.zyren.cultivation.ability.kits.EarthKit;
 import net.zyren.cultivation.ability.kits.LightningKit;
 import net.zyren.cultivation.ability.kits.FireKit;
 import net.zyren.cultivation.ability.kits.LightKit;
@@ -32,7 +31,8 @@ public final class AspectKits {
 		// Warrior is now the sub-aspect Physical -> Warrior (2026-10-27); its old kit is no longer registered.
 		register(PhysicalKit.create());
 		register(DarkKit.create());
-		register(EarthKit.create());
+		// Earth DEFAULT kit (2026-11-05) replaces the old Earth kit (file kept: Reinforce + helpers are reused).
+		register(net.zyren.cultivation.ability.kits.EarthDefaultKit.create());
 		// Electric DEFAULT kit (2026-10-29) replaces the old Lightning kit (file kept: Reinforce + strike helpers are reused).
 		register(net.zyren.cultivation.ability.kits.ElectricKit.create());
 		register(FireKit.create());
