@@ -28,6 +28,7 @@ public final class CultivationEvents {
 	public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player) {
 			QiData.of(player).normalize();
+			CoreTypes.ensureAssigned(player); // first join (or old save): random core type
 			AspectMigration.migrate(player); // old saves: Warrior -> Physical (+ Physical -> Warrior learned)
 			AspectData.of(player).normalize();
 			net.zyren.cultivation.data.SubAspectData.of(player).normalize(); // after AspectData: needs clean slots

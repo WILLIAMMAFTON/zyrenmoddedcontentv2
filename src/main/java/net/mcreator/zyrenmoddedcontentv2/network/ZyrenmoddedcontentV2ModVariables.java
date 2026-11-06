@@ -104,6 +104,7 @@ public class ZyrenmoddedcontentV2ModVariables {
 		clone.pure_sub_equipped = original.pure_sub_equipped;
 		clone.sub_form_active = original.sub_form_active;
 		clone.pending_sub_learned = original.pending_sub_learned;
+		clone.qi_core_kind = original.qi_core_kind;
 		if (!event.isWasDeath()) {
 		}
 		event.getEntity().setData(PLAYER_VARIABLES, clone);
@@ -149,6 +150,7 @@ public class ZyrenmoddedcontentV2ModVariables {
 		public String pure_sub_equipped = "\"\"";
 		public String sub_form_active = "";
 		public String pending_sub_learned = "\"\"";
+		public String qi_core_kind = "\"\"";
 
 		@Override
 		public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
@@ -191,6 +193,7 @@ public class ZyrenmoddedcontentV2ModVariables {
 			nbt.putString("pure_sub_equipped", pure_sub_equipped);
 			nbt.putString("sub_form_active", sub_form_active);
 			nbt.putString("pending_sub_learned", pending_sub_learned);
+			nbt.putString("qi_core_kind", qi_core_kind);
 			return nbt;
 		}
 
@@ -234,6 +237,7 @@ public class ZyrenmoddedcontentV2ModVariables {
 			pure_sub_equipped = nbt.getString("pure_sub_equipped");
 			sub_form_active = nbt.getString("sub_form_active");
 			pending_sub_learned = nbt.getString("pending_sub_learned");
+			qi_core_kind = nbt.getString("qi_core_kind");
 		}
 
 		public void markSyncDirty() {

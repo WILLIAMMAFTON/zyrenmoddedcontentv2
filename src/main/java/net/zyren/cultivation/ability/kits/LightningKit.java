@@ -356,7 +356,7 @@ public final class LightningKit {
 
 		@Override
 		public ActionResult checkUse(ServerPlayer player) {
-			if (net.zyren.cultivation.data.QiData.of(player).getCoreType() == net.zyren.cultivation.data.CoreType.CORRUPTED)
+			if (net.zyren.cultivation.data.QiData.of(player).getCoreState() == net.zyren.cultivation.data.CoreState.CORRUPTED)
 				return ActionResult.fail("A Corrupted Core cannot call Nuclear Winter."); // user decision 2026-10-07
 			if (LightningEvents.nuclearWinterActive(player))
 				return ActionResult.fail("Nuclear Winter is already raging.");

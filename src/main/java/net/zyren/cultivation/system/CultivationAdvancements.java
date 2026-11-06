@@ -17,7 +17,7 @@ import net.zyren.cultivation.ability.core.AbilityState;
 import net.zyren.cultivation.config.CultivationConfig;
 import net.zyren.cultivation.data.AspectData;
 import net.zyren.cultivation.data.AspectType;
-import net.zyren.cultivation.data.CoreType;
+import net.zyren.cultivation.data.CoreState;
 import net.zyren.cultivation.data.QiData;
 
 import java.util.HashMap;
@@ -102,7 +102,7 @@ public final class CultivationAdvancements {
 	}
 
 	public static void onAbilityUsed(ServerPlayer player, AspectType aspect) {
-		if (aspect == AspectType.PHYSICAL && QiData.of(player).getCoreType() == CoreType.CORRUPTED)
+		if (aspect == AspectType.PHYSICAL && QiData.of(player).getCoreState() == CoreState.CORRUPTED)
 			award(player, ADDICTIVE);
 	}
 
@@ -136,12 +136,12 @@ public final class CultivationAdvancements {
 		int max = maxCoreLevel();
 		if (max > 0 && q.getCoreLevel() >= max)
 			award(p, GODHOOD);
-		CoreType type = q.getCoreType();
-		if (type == CoreType.CORRUPTED) {
+		CoreState type = q.getCoreState();
+		if (type == CoreState.CORRUPTED) {
 			award(p, INSANE);
 			if (AspectData.of(p).getActive() == AspectType.PHYSICAL && AbilityState.of(p).passiveActive())
 				award(p, ADDICTIVE);
-		} else if (type == CoreType.POISONED) {
+		} else if (type == CoreState.POISONED) {
 			award(p, NOT_ASCENSION);
 		}
 	}
@@ -162,7 +162,7 @@ public final class CultivationAdvancements {
 		if (!(event.getEntity() instanceof ServerPlayer victim) || !(event.getSource().getEntity() instanceof ServerPlayer killer) || killer == victim)
 			return;
 		QiData k = QiData.of(killer);
-		if (k.getCoreType() == CoreType.CORRUPTED && k.getCoreLevel() >= CultivationConfig.ADV_PURE_SUFFERING_LEVEL.get())
+		if (k.getCoreState() == CoreState.CORRUPTED && k.getCoreLevel() >= CultivationConfig.ADV_PURE_SUFFERING_LEVEL.get())
 			award(victim, PURE_SUFFERING);
 		if (brokeWithin(victim, CultivationConfig.ADV_FAILURE_MINUTES.get()))
 			award(victim, WHOLE_NEW_FAILURE);

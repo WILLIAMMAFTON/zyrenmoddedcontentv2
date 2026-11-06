@@ -22,7 +22,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.zyren.cultivation.ability.core.AbilityState;
 import net.zyren.cultivation.data.AspectData;
 import net.zyren.cultivation.data.AspectType;
-import net.zyren.cultivation.data.CoreType;
+import net.zyren.cultivation.data.CoreState;
 import net.zyren.cultivation.data.QiData;
 import net.zyren.cultivation.system.ActionResult;
 import net.zyren.cultivation.system.AspectChoices;
@@ -50,7 +50,8 @@ import java.util.Arrays;
  *   /qi qi add <amount>            -> QiCoreStorage.addQi
  *   /qi qi spend <amount>          -> QiCoreStorage.trySpendQi
  *   /qi qi setmax <amount>         -> QiCoreStorage.setCoreMax
- *   /qi coretype <PURE|CORRUPTED|POISONED>
+ *   /qi corestate <PURE|CORRUPTED|POISONED>   (core state: condition of the core)
+ *   /qi coretype [get|set <type>|reroll]  (core type: CURSED/ELEMENTAL/VOID/CORE/SOUL)
  *   /qi reset                      -> back to initial state (aspects too)
  *
  * Stage 2 (aspects):
@@ -268,22 +269,40 @@ public final class CultivationCommands {
 					return status(ctx);
 				}))));
 
-		root.then(Commands.literal("coretype").requires(OP).then(Commands.argument("type", StringArgumentType.word())
-				.suggests((ctx, builder) -> SharedSuggestionProvider.suggest(Arrays.stream(CoreType.values()).map(CoreType::id), builder))
+		root.then(Commands.literal("corestate").requires(OP).then(Commands.argument("type", StringArgumentType.word())
+				.suggests((ctx, builder) -> SharedSuggestionProvider.suggest(Arrays.stream(CoreState.values()).map(CoreState::id), builder))
 				.executes(ctx -> {
 					String raw = StringArgumentType.getString(ctx, "type");
-					CoreType type = CoreType.fromId(raw);
+					CoreState type = CoreState.fromId(raw);
 					if (!type.id().equalsIgnoreCase(raw)) {
-						ctx.getSource().sendFailure(Component.literal("Unknown core type: " + raw));
+						ctx.getSource().sendFailure(Component.literal("Unknown core state: " + raw));
 						return 0;
 					}
 					ServerPlayer tp = ctx.getSource().getPlayerOrException();
 					// Same path as a real conversion: resets corruption, drops Pure if no longer allowed.
-					net.zyren.cultivation.system.Corruption.setCoreType(tp, type, "Core type set to " + type.id() + ".", net.minecraft.ChatFormatting.GRAY);
-					if (type != CoreType.PURE && AspectSwitching.isSwitching(tp))
+					net.zyren.cultivation.system.Corruption.setCoreState(tp, type, "Core state set to " + type.id() + ".", net.minecraft.ChatFormatting.GRAY);
+					if (type != CoreState.PURE && AspectSwitching.isSwitching(tp))
 						AspectSwitching.discard(tp);
 					return status(ctx);
 				})));
+
+		// Core TYPE (Cursed / Elemental / Void / Core / Soul): view, admin set, admin reroll.
+		root.then(Commands.literal("coretype")
+				.executes(ctx -> {
+					net.zyren.cultivation.data.CoreType t = QiData.of(ctx.getSource().getPlayerOrException()).getCoreType();
+					reply(ctx, "Core type: " + (t == null ? "none" : t.displayName()));
+					return 1;
+				})
+				.then(Commands.literal("set").requires(OP).then(Commands.argument("type", StringArgumentType.word())
+						.suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+								Arrays.stream(net.zyren.cultivation.data.CoreType.values()).map(net.zyren.cultivation.data.CoreType::id), builder))
+						.executes(ctx -> setCoreType(ctx, java.util.List.of(ctx.getSource().getPlayerOrException())))
+						.then(Commands.argument("players", EntityArgument.players())
+								.executes(ctx -> setCoreType(ctx, EntityArgument.getPlayers(ctx, "players"))))))
+				.then(Commands.literal("reroll").requires(OP)
+						.executes(ctx -> rerollCoreType(ctx, java.util.List.of(ctx.getSource().getPlayerOrException())))
+						.then(Commands.argument("players", EntityArgument.players())
+								.executes(ctx -> rerollCoreType(ctx, EntityArgument.getPlayers(ctx, "players"))))));
 
 		root.then(Commands.literal("breakcore").requires(OP).executes(ctx -> {
 			ServerPlayer p = ctx.getSource().getPlayerOrException();
@@ -320,13 +339,36 @@ public final class CultivationCommands {
 		event.getDispatcher().register(root);
 	}
 
+	private static int setCoreType(CommandContext<CommandSourceStack> ctx, java.util.Collection<ServerPlayer> players) {
+		String raw = StringArgumentType.getString(ctx, "type");
+		net.zyren.cultivation.data.CoreType type = net.zyren.cultivation.data.CoreType.fromId(raw);
+		if (type == null) {
+			ctx.getSource().sendFailure(Component.literal("Unknown core type: " + raw));
+			return 0;
+		}
+		for (ServerPlayer p : players)
+			net.zyren.cultivation.system.CoreTypes.set(p, type, "/qi coretype set");
+		ctx.getSource().sendSuccess(() -> Component.literal("Core type set to " + type.displayName() + " for " + players.size() + " player(s)."), true);
+		return players.size();
+	}
+
+	private static int rerollCoreType(CommandContext<CommandSourceStack> ctx, java.util.Collection<ServerPlayer> players) {
+		StringBuilder sb = new StringBuilder("Core type rerolled:");
+		for (ServerPlayer p : players)
+			sb.append(' ').append(p.getGameProfile().getName()).append('=')
+					.append(net.zyren.cultivation.system.CoreTypes.reroll(p, "/qi coretype reroll").displayName());
+		ctx.getSource().sendSuccess(() -> Component.literal(sb.toString()), true);
+		return players.size();
+	}
+
 	private static int status(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
 		QiData d = QiData.of(ctx.getSource().getPlayerOrException());
 		reply(ctx, "no_qi=" + fmt(d.getNoQi())
 				+ " | qi_core_level=" + d.getCoreLevel()
 				+ " | qi_core_amount=" + fmt(d.getCoreAmount()) + "/" + fmt(d.getCoreMax())
 				+ " | qi_cultivated=" + fmt(d.getCultivated())
-				+ " | qi_core_type=" + d.getCoreType().id());
+				+ " | core state (qi_core_type)=" + d.getCoreState().id()
+				+ " | core type (qi_core_kind)=" + (d.getCoreType() == null ? "none" : d.getCoreType().id()));
 		return 1;
 	}
 

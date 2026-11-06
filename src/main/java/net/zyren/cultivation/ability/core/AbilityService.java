@@ -105,7 +105,7 @@ public final class AbilityService {
 			if (rescued && !player.isAlive())
 				return ActionResult.fail("Your Core was annihilated.");
 			if (rescued) {
-				cost = QiCosts.effective(player, base); // the core type may have changed
+				cost = QiCosts.effective(player, base); // the core state may have changed
 				if (ability.costCappedAtCurrentQi())
 					cost = Math.min(cost, QiData.of(player).getCoreAmount());
 			}

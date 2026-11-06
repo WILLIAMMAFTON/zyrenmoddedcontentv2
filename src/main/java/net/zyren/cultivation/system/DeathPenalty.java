@@ -15,7 +15,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.zyren.cultivation.config.CultivationConfig;
 import net.zyren.cultivation.data.AspectData;
 import net.zyren.cultivation.data.AspectType;
-import net.zyren.cultivation.data.CoreType;
+import net.zyren.cultivation.data.CoreState;
 import net.zyren.cultivation.data.QiData;
 import net.zyren.cultivation.network.DeathChoiceMessage;
 
@@ -48,7 +48,7 @@ public final class DeathPenalty {
 		if (event.isCanceled() || !(event.getEntity() instanceof ServerPlayer player))
 			return;
 		QiData q = QiData.of(player);
-		if (q.getCoreLevel() < 1 || q.getCoreType() == CoreType.CORRUPTED)
+		if (q.getCoreLevel() < 1 || q.getCoreState() == CoreState.CORRUPTED)
 			return;
 		if (!pending(player).isEmpty())
 			return; // an earlier death's choice is still open: no new penalty (decided)

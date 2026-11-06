@@ -204,7 +204,7 @@ public class CultivationScreen extends Screen {
 		AspectData a = AspectData.of(player);
 
 		g.drawCenteredString(font, title, width / 2, top, COLOR_TITLE);
-		g.drawCenteredString(font, "Core Lv " + q.getCoreLevel() + "   Core: " + q.getCoreType().id() + "   Qi " + fmt(q.getCoreAmount()) + " / " + fmt(q.getCoreMax()),
+		g.drawCenteredString(font, "Core Lv " + q.getCoreLevel() + "   " + coreTypeLabel(q) + "   State: " + q.getCoreState().id() + "   Qi " + fmt(q.getCoreAmount()) + " / " + fmt(q.getCoreMax()),
 				width / 2, top + 12, COLOR_TEXT);
 
 		int msgY = tab == 0 ? renderAspects(g, a) : renderCore(g, player, q);
@@ -212,6 +212,11 @@ public class CultivationScreen extends Screen {
 		String msg = ClientCultivationState.message();
 		if (!msg.isEmpty())
 			g.drawCenteredString(font, msg, width / 2, msgY, ClientCultivationState.messageSuccess() ? COLOR_GOOD : COLOR_BAD);
+	}
+
+	private static String coreTypeLabel(QiData q) {
+		net.zyren.cultivation.data.CoreType t = q.getCoreType();
+		return "Type: " + (t == null ? "-" : t.displayName());
 	}
 
 	/** @return y for the feedback message */
@@ -256,9 +261,9 @@ public class CultivationScreen extends Screen {
 		if (q.getCoreLevel() >= 1) {
 			double corruption = net.zyren.cultivation.data.CorruptionData.of(player).getCorruption();
 			double max = net.zyren.cultivation.config.CorruptionConfig.MAX.get();
-			String status = q.getCoreType() == net.zyren.cultivation.data.CoreType.PURE
+			String status = q.getCoreState() == net.zyren.cultivation.data.CoreState.PURE
 					? "Corruption " + (int) Math.floor(corruption / max * 100) + "% (" + (int) corruption + "/" + (int) max + ")"
-					: "Core: " + q.getCoreType().id();
+					: "Core state: " + q.getCoreState().id();
 			int med = ClientCorruptionState.meditationSeconds();
 			if (med > 0)
 				status += "   Meditating " + med / 60 + ":" + String.format("%02d", med % 60);

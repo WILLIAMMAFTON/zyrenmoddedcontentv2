@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.zyren.cultivation.config.CultivationConfig;
 import net.zyren.cultivation.data.AspectData;
 import net.zyren.cultivation.data.AspectType;
-import net.zyren.cultivation.data.CoreType;
+import net.zyren.cultivation.data.CoreState;
 import net.zyren.cultivation.data.QiData;
 import net.zyren.cultivation.network.CultivationNetwork;
 import net.zyren.cultivation.network.SwitchStatusMessage;
@@ -62,7 +62,7 @@ public final class AspectSwitching {
 		AspectData a = AspectData.of(player);
 		if (!a.owns(target))
 			return ActionResult.fail("You don't have the " + target.displayName() + " aspect.");
-		if (target == AspectType.PURE && QiData.of(player).getCoreType() != CoreType.PURE)
+		if (target == AspectType.PURE && QiData.of(player).getCoreState() != CoreState.PURE)
 			return ActionResult.fail("A Corrupted or Poisoned Core cannot use the Pure aspect.");
 		if (a.getActive() == target)
 			return ActionResult.fail(target.displayName() + " is already active.");
@@ -105,7 +105,7 @@ public final class AspectSwitching {
 			CultivationNetwork.sendStatus(player, SwitchStatusMessage.cancelled(p.target(), "You have no Qi Core."));
 			return;
 		}
-		if (p.target() == AspectType.PURE && QiData.of(player).getCoreType() != CoreType.PURE) {
+		if (p.target() == AspectType.PURE && QiData.of(player).getCoreState() != CoreState.PURE) {
 			CultivationNetwork.sendStatus(player, SwitchStatusMessage.cancelled(p.target(), "A Corrupted or Poisoned Core cannot use the Pure aspect."));
 			return;
 		}

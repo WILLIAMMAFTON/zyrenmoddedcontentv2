@@ -22,6 +22,11 @@ public final class CultivationConfig {
 	public static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> CORE_LEVELS;
 	public static final ModConfigSpec.DoubleValue EXTRA_ASPECT_MULTIPLIER;
 
+	// ---- Core type (Cursed / Elemental / Void / Core / Soul), assigned at random on first join ----
+	public static final ModConfigSpec.DoubleValue CORE_TYPE_WEIGHT_CURSED, CORE_TYPE_WEIGHT_ELEMENTAL, CORE_TYPE_WEIGHT_VOID,
+			CORE_TYPE_WEIGHT_CORE, CORE_TYPE_WEIGHT_SOUL;
+	public static final ModConfigSpec.BooleanValue CORE_TYPE_ANNOUNCE;
+
 	// ---- Advancements ----
 	public static final ModConfigSpec.IntValue ADV_PURE_SUFFERING_LEVEL;
 	public static final ModConfigSpec.IntValue ADV_FAILURE_MINUTES;
@@ -126,6 +131,17 @@ public final class CultivationConfig {
 				"Water underwater/in rain, Dark at night or in darkness, Light in daylight under open sky). PLACEHOLDER.").defineInRange("flavour_xp_per_second", 0.2, 0.0, Double.MAX_VALUE);
 		MASTERY_XP_PER_ACTION_FLAVOUR = b.comment("Source 4b: XP per aspect action, for any OWNED aspect (Earth mining stone, Warrior sword hits, Physical unarmed hits,",
 				"Lightning struck by lightning, Protective taking a hit while active). PLACEHOLDER.").defineInRange("flavour_xp_per_action", 1.0, 0.0, Double.MAX_VALUE);
+		b.pop();
+
+		b.comment("Core type: Cursed / Elemental / Void / Core / Soul (claude/core-types.md). Given at random the first time a player",
+				"joins and kept for good (core breaks, death and /qi reset don't change it). Labels only for now: no effects yet.",
+				"Chance of each type = its weight / sum of all weights. Decided: equal chances. 0 = never rolled.").push("core_type");
+		CORE_TYPE_WEIGHT_CURSED = b.defineInRange("weight_cursed", 1.0, 0.0, 1.0E9);
+		CORE_TYPE_WEIGHT_ELEMENTAL = b.defineInRange("weight_elemental", 1.0, 0.0, 1.0E9);
+		CORE_TYPE_WEIGHT_VOID = b.defineInRange("weight_void", 1.0, 0.0, 1.0E9);
+		CORE_TYPE_WEIGHT_CORE = b.defineInRange("weight_core", 1.0, 0.0, 1.0E9);
+		CORE_TYPE_WEIGHT_SOUL = b.defineInRange("weight_soul", 1.0, 0.0, 1.0E9);
+		CORE_TYPE_ANNOUNCE = b.comment("Tell the player their core type in chat when it's first given.").define("announce", true);
 		b.pop();
 
 		b.comment("Advancement thresholds").push("advancements");

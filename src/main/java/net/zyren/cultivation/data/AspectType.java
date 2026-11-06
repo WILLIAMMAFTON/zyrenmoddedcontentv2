@@ -7,7 +7,7 @@ import java.util.Locale;
  * BODY, SOUL.
  *
  * PURE is special: every cultivator has it, it is leveled, and it never occupies one of the
- * 4 aspect slots. It is NOT the same thing as a PURE core type (see {@link CoreType}).
+ * 4 aspect slots. It is NOT the same thing as a PURE core state (see {@link CoreState}).
  *
  * Stored ids never change (they're in player saves):
  *  - ELECTRIC: "LIGHTNING" accepted as an alias.

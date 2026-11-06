@@ -19,7 +19,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import net.zyren.cultivation.data.AspectData;
 import net.zyren.cultivation.data.AspectType;
-import net.zyren.cultivation.data.CoreType;
+import net.zyren.cultivation.data.CoreState;
 import net.zyren.cultivation.data.QiData;
 import net.zyren.cultivation.network.AbilityStateMessage;
 import net.zyren.cultivation.system.QiCoreStorage;
@@ -93,10 +93,10 @@ public final class AbilityEvents {
 	/** "Corrupted Core cannot use Pure aspect." Deactivates Pure if the core becomes corrupted. */
 	private static void enforceCorruptedPureRule(ServerPlayer player) {
 		AspectData a = AspectData.of(player);
-		if (a.getActive() == AspectType.PURE && QiData.of(player).getCoreType() != CoreType.PURE) {
+		if (a.getActive() == AspectType.PURE && QiData.of(player).getCoreState() != CoreState.PURE) {
 			a.setActive(null);
-			player.displayClientMessage(Component.literal("A " + QiData.of(player).getCoreType().id().charAt(0)
-					+ QiData.of(player).getCoreType().id().substring(1).toLowerCase() + " Core cannot channel Pure Qi."), false);
+			player.displayClientMessage(Component.literal("A " + QiData.of(player).getCoreState().id().charAt(0)
+					+ QiData.of(player).getCoreState().id().substring(1).toLowerCase() + " Core cannot channel Pure Qi."), false);
 		}
 	}
 

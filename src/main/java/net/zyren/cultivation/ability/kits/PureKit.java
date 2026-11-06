@@ -30,7 +30,7 @@ import net.zyren.cultivation.ability.core.Targeting;
 import net.zyren.cultivation.config.AbilityConfig;
 import net.zyren.cultivation.data.AspectData;
 import net.zyren.cultivation.data.AspectType;
-import net.zyren.cultivation.data.CoreType;
+import net.zyren.cultivation.data.CoreState;
 import net.zyren.cultivation.data.QiData;
 import net.zyren.cultivation.system.ActionResult;
 import net.zyren.cultivation.system.CoreBreak;
@@ -483,7 +483,7 @@ public final class PureKit {
 			if (e instanceof ServerPlayer p) {
 				if (p.isCreative() || p.isSpectator() || Targeting.isAllied(user, p))
 					return true;
-				return QiData.of(p).getCoreType() == CoreType.CORRUPTED && QiEffects.isReinforced(p);
+				return QiData.of(p).getCoreState() == CoreState.CORRUPTED && QiEffects.isReinforced(p);
 			}
 			return false;
 		}

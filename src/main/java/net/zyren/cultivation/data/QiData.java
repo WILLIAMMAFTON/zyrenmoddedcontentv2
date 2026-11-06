@@ -75,33 +75,53 @@ public final class QiData {
 		dirty();
 	}
 
-	// ---- qi_core_type: condition of the core (NOT an aspect) ----
-	public CoreType getCoreType() {
-		return CoreType.fromId(vars.qi_core_type);
+	// ---- core STATE, stored in qi_core_type: condition of the core (NOT an aspect, NOT the core type) ----
+	public CoreState getCoreState() {
+		return CoreState.fromId(vars.qi_core_type);
 	}
 
-	public void setCoreType(CoreType type) {
+	public void setCoreState(CoreState type) {
 		vars.qi_core_type = type.id();
 		dirty();
 	}
 
-	/** Rewrites qi_core_type into its clean form (e.g. MCreator's quoted "pure" -> PURE). */
+	/** Rewrites qi_core_type / qi_core_kind into their clean form (e.g. MCreator's quoted "pure" -> PURE, "\"\"" -> ""). */
 	public void normalize() {
-		String clean = getCoreType().id();
+		String clean = getCoreState().id();
 		if (!clean.equals(vars.qi_core_type)) {
 			vars.qi_core_type = clean;
 			dirty();
 		}
+		CoreType type = getCoreType();
+		String cleanType = type == null ? "" : type.id();
+		if (!cleanType.equals(vars.qi_core_kind)) {
+			vars.qi_core_kind = cleanType;
+			dirty();
+		}
 	}
 
-	/** Puts the player back into the spec's initial state (section 3). */
+	// ---- core TYPE, stored in qi_core_kind: Cursed / Elemental / Void / Core / Soul ----
+	// Assigned at random on first join (system/CoreTypes). Never reset by core breaks or resets.
+
+	/** @return the core type, or null if none has been assigned yet. */
+	public CoreType getCoreType() {
+		return CoreType.fromId(vars.qi_core_kind);
+	}
+
+	/** Use system/CoreTypes.set(...) from gameplay code so later change rules have one entry point. */
+	public void setCoreType(CoreType type) {
+		vars.qi_core_kind = type == null ? "" : type.id();
+		dirty();
+	}
+
+	/** Puts the player back into the spec's initial state (section 3). The core type is kept. */
 	public void resetToInitialState() {
 		vars.no_qi = 0;
 		vars.Qi_core_level = 0;
 		vars.qi_core_amount = 0;
 		vars.qi_core_max = 0;
 		vars.qi_cultivated = 0;
-		vars.qi_core_type = CoreType.PURE.id();
+		vars.qi_core_type = CoreState.PURE.id();
 		dirty();
 	}
 

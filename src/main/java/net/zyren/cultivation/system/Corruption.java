@@ -20,7 +20,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.zyren.cultivation.config.CorruptionConfig;
 import net.zyren.cultivation.data.AspectData;
 import net.zyren.cultivation.data.AspectType;
-import net.zyren.cultivation.data.CoreType;
+import net.zyren.cultivation.data.CoreState;
 import net.zyren.cultivation.data.CorruptionData;
 import net.zyren.cultivation.data.QiData;
 
@@ -48,7 +48,7 @@ public final class Corruption {
 	/** Only formed Pure cores accumulate corruption. */
 	public static boolean canCorrupt(Player p) {
 		QiData q = QiData.of(p);
-		return CorruptionConfig.ENABLED.get() && q.getCoreLevel() >= 1 && q.getCoreType() == CoreType.PURE;
+		return CorruptionConfig.ENABLED.get() && q.getCoreLevel() >= 1 && q.getCoreState() == CoreState.PURE;
 	}
 
 	public static boolean pastPointOfNoReturn(Player p) {
@@ -96,7 +96,7 @@ public final class Corruption {
 	}
 
 	private static void becomeCorrupted(ServerPlayer p) {
-		QiData.of(p).setCoreType(CoreType.CORRUPTED);
+		QiData.of(p).setCoreState(CoreState.CORRUPTED);
 		CorruptionData.of(p).setCorruption(0); // no longer relevant once CORRUPTED
 		if (AspectData.of(p).getActive() == AspectType.PURE)
 			AspectData.of(p).setActive(null);
@@ -236,17 +236,17 @@ public final class Corruption {
 			// "ill-gotten ascension": no core -> a Poisoned core forms at once
 			q.setNoQi(QiBreakthrough.noQiRequired());
 			QiBreakthrough.tryFirstBreakthrough(p);
-			q.setCoreType(CoreType.POISONED);
+			q.setCoreState(CoreState.POISONED);
 			CorruptionData.of(p).setCorruption(0); // corruption only applies to Pure cores
 			leavePure(p);
 			p.displayClientMessage(Component.literal("A core forms... but something is wrong with it. Your Core is POISONED.").withStyle(ChatFormatting.DARK_GREEN), false);
 			return;
 		}
-		if (q.getCoreType() != CoreType.PURE)
+		if (q.getCoreState() != CoreState.PURE)
 			return; // the spec only defines the effect on Pure cores
 		int lvl = q.getCoreLevel();
 		if (lvl <= 1) {
-			q.setCoreType(CoreType.POISONED);
+			q.setCoreState(CoreState.POISONED);
 			CorruptionData.of(p).setCorruption(0); // corruption only applies to Pure cores
 			leavePure(p);
 			p.displayClientMessage(Component.literal("The Poisoned Qi seeps into your fragile Core. It is now POISONED.").withStyle(ChatFormatting.DARK_GREEN), false);
@@ -290,10 +290,10 @@ public final class Corruption {
 	}
 
 	/** Cure (back to PURE) or corrupt a core, with a message. */
-	public static void setCoreType(ServerPlayer p, CoreType type, String message, ChatFormatting color) {
-		QiData.of(p).setCoreType(type);
+	public static void setCoreState(ServerPlayer p, CoreState type, String message, ChatFormatting color) {
+		QiData.of(p).setCoreState(type);
 		CorruptionData.of(p).setCorruption(0);
-		if (type != CoreType.PURE)
+		if (type != CoreState.PURE)
 			leavePure(p);
 		p.displayClientMessage(Component.literal(message).withStyle(color), false);
 	}

@@ -4,7 +4,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import net.zyren.cultivation.data.AspectData;
-import net.zyren.cultivation.data.CoreType;
+import net.zyren.cultivation.data.CoreState;
 import net.zyren.cultivation.data.QiData;
 
 /**
@@ -12,7 +12,7 @@ import net.zyren.cultivation.data.QiData;
  * to restart cultivation"; "If Corrupted Core breaks: Player dies").
  *
  * Decided 2026-10-06: a break resets the CORE only (no_qi, core level, Qi, max, cultivated,
- * core type back to PURE). Aspects and their levels are kept. The active aspect is cleared,
+ * core state back to PURE). Aspects and their levels are kept. The active aspect is cleared,
  * since there's no core to channel it.
  */
 public final class CoreBreak {
@@ -39,7 +39,7 @@ public final class CoreBreak {
 		if (q.getCoreLevel() < 1)
 			return false;
 		AntiFarm.markLevelReached(player); // re-cultivating doesn't re-grant breakthrough choices
-		boolean corrupted = q.getCoreType() == CoreType.CORRUPTED;
+		boolean corrupted = q.getCoreState() == CoreState.CORRUPTED;
 		int levelBefore = q.getCoreLevel();
 		q.resetToInitialState();
 		// Corruption belongs to the core: a re-formed core starts clean (it was carried over before).

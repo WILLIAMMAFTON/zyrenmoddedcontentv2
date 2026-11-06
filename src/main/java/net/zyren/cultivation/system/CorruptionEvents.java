@@ -42,7 +42,7 @@ import net.zyren.cultivation.config.CorruptionConfig;
 import net.zyren.cultivation.config.CultivationConfig;
 import net.zyren.cultivation.data.AspectData;
 import net.zyren.cultivation.data.AspectType;
-import net.zyren.cultivation.data.CoreType;
+import net.zyren.cultivation.data.CoreState;
 import net.zyren.cultivation.data.CorruptionData;
 import net.zyren.cultivation.data.QiData;
 import net.zyren.cultivation.network.CorruptionStatusMessage;
@@ -128,14 +128,14 @@ public final class CorruptionEvents {
 	/** Poisoned cores leak Qi; nearby players get warnings / HUD entries / Nausea + Poison. */
 	private static void perSecondPoisoned(ServerPlayer p) {
 		QiData q = QiData.of(p);
-		if (q.getCoreLevel() >= 1 && q.getCoreType() == CoreType.POISONED) {
+		if (q.getCoreLevel() >= 1 && q.getCoreState() == CoreState.POISONED) {
 			double leak = CorruptionConfig.POISONED_LEAK_PER_MIN.get() / 60.0;
 			q.setCoreAmount(Math.max(0, q.getCoreAmount() - leak));
 			return;
 		}
 		List<ServerPlayer> poisoned = new ArrayList<>();
 		for (ServerPlayer o : p.serverLevel().players())
-			if (o != p && !o.isSpectator() && o.isAlive() && QiData.of(o).getCoreLevel() >= 1 && QiData.of(o).getCoreType() == CoreType.POISONED)
+			if (o != p && !o.isSpectator() && o.isAlive() && QiData.of(o).getCoreLevel() >= 1 && QiData.of(o).getCoreState() == CoreState.POISONED)
 				poisoned.add(o);
 		long now = p.serverLevel().getGameTime();
 
@@ -149,7 +149,7 @@ public final class CorruptionEvents {
 		}
 
 		// Pure cores near a Poisoned core for long enough: Nausea + Poison
-		if (q.getCoreLevel() >= 1 && q.getCoreType() == CoreType.PURE) {
+		if (q.getCoreLevel() >= 1 && q.getCoreState() == CoreState.PURE) {
 			int range = CorruptionConfig.PROXIMITY_RANGE.get();
 			boolean near = poisoned.stream().anyMatch(o -> o.distanceTo(p) <= range);
 			int t = near ? NEAR_POISON.getOrDefault(p.getUUID(), 0) + 20 : 0;
@@ -171,7 +171,7 @@ public final class CorruptionEvents {
 		if (QiData.of(p).getCoreLevel() >= CorruptionConfig.HUD_LEVEL.get()) {
 			int range = CorruptionConfig.HUD_RANGE.get();
 			for (ServerPlayer o : p.serverLevel().players())
-				if (o != p && !o.isSpectator() && QiData.of(o).getCoreLevel() >= 1 && QiData.of(o).getCoreType() == CoreType.POISONED
+				if (o != p && !o.isSpectator() && QiData.of(o).getCoreLevel() >= 1 && QiData.of(o).getCoreState() == CoreState.POISONED
 						&& o.distanceTo(p) <= range)
 					seen.add(o.getName().getString() + " (" + (int) o.distanceTo(p) + "m)");
 		}
@@ -251,7 +251,7 @@ public final class CorruptionEvents {
 		long now = attacker.serverLevel().getGameTime();
 		QiData aq = QiData.of(attacker);
 
-		if (aq.getCoreType() == CoreType.CORRUPTED && isQiHit(event.getSource(), attacker, event.getEntity(), now, null))
+		if (aq.getCoreState() == CoreState.CORRUPTED && isQiHit(event.getSource(), attacker, event.getEntity(), now, null))
 			event.setNewDamage((float) (event.getNewDamage() * CultivationConfig.CORRUPTED_DAMAGE_MULTIPLIER.get()));
 
 		if (!(event.getEntity() instanceof ServerPlayer victim) || AspectData.of(attacker).getActive() != AspectType.PURE
@@ -260,15 +260,15 @@ public final class CorruptionEvents {
 		QiData vq = QiData.of(victim);
 		if (vq.getCoreLevel() < 1)
 			return;
-		if (vq.getCoreType() == CoreType.CORRUPTED) {
+		if (vq.getCoreState() == CoreState.CORRUPTED) {
 			event.setNewDamage((float) (event.getNewDamage() * CultivationConfig.PURE_VS_CORRUPTED_DAMAGE_MULTIPLIER.get()));
 			if (attacker.getRandom().nextDouble() < CultivationConfig.PURE_CORRUPTION_CURE_CHANCE.get())
-				Corruption.setCoreType(victim, CoreType.PURE, "Pure Qi burns the corruption out of your Core. It is PURE again.", ChatFormatting.AQUA);
-		} else if (vq.getCoreType() == CoreType.POISONED && attacker.getRandom().nextDouble() < CorruptionConfig.PURE_VS_POISONED_CHANCE.get()) {
+				Corruption.setCoreState(victim, CoreState.PURE, "Pure Qi burns the corruption out of your Core. It is PURE again.", ChatFormatting.AQUA);
+		} else if (vq.getCoreState() == CoreState.POISONED && attacker.getRandom().nextDouble() < CorruptionConfig.PURE_VS_POISONED_CHANCE.get()) {
 			if (attacker.getRandom().nextDouble() < CorruptionConfig.PURE_VS_POISONED_CURE_SHARE.get())
-				Corruption.setCoreType(victim, CoreType.PURE, "Pure Qi purges the poison. Your Core is PURE again.", ChatFormatting.AQUA);
+				Corruption.setCoreState(victim, CoreState.PURE, "Pure Qi purges the poison. Your Core is PURE again.", ChatFormatting.AQUA);
 			else
-				Corruption.setCoreType(victim, CoreType.CORRUPTED, "Pure Qi clashes with the poison... your Core turns CORRUPTED.", ChatFormatting.DARK_PURPLE);
+				Corruption.setCoreState(victim, CoreState.CORRUPTED, "Pure Qi clashes with the poison... your Core turns CORRUPTED.", ChatFormatting.DARK_PURPLE);
 		}
 	}
 

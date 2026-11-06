@@ -3,7 +3,7 @@ package net.zyren.cultivation.ability.core;
 import net.minecraft.world.entity.player.Player;
 
 import net.zyren.cultivation.config.CultivationConfig;
-import net.zyren.cultivation.data.CoreType;
+import net.zyren.cultivation.data.CoreState;
 import net.zyren.cultivation.data.QiData;
 
 /**
@@ -17,7 +17,7 @@ public final class QiCosts {
 	public static double effective(Player player, double baseCost) {
 		if (baseCost <= 0)
 			return Math.max(0, baseCost);
-		double cost = QiData.of(player).getCoreType() == CoreType.CORRUPTED
+		double cost = QiData.of(player).getCoreState() == CoreState.CORRUPTED
 				? baseCost * CultivationConfig.CORRUPTED_QI_COST_MULTIPLIER.get()
 				: baseCost;
 		if (net.zyren.cultivation.system.Corruption.hasResistance(player))
