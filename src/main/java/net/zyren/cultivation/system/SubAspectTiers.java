@@ -59,8 +59,24 @@ public final class SubAspectTiers {
 		return i < 0 ? 0 : i + 1;
 	}
 
-	/** Aspect level needed for this sub-aspect, or -1 if locked (not in a tier, or tier level -1). */
+	/** Listed in subaspects-server.toml disabled_subaspects. */
+	public static boolean isDisabled(SubAspectType sub) {
+		if (sub == null)
+			return false;
+		try {
+			for (String id : SubAspectConfig.DISABLED.get())
+				if (SubAspectType.fromId(id) == sub)
+					return true;
+		} catch (IllegalStateException notLoaded) {
+			return false;
+		}
+		return false;
+	}
+
+	/** Aspect level needed for this sub-aspect, or -1 if locked (not in a tier, tier level -1, or disabled). */
 	public static int requiredLevel(SubAspectType sub) {
+		if (isDisabled(sub))
+			return -1;
 		int tier = tierOf(sub);
 		if (tier == 0)
 			return -1;

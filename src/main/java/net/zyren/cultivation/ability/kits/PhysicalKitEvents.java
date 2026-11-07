@@ -247,16 +247,23 @@ public final class PhysicalKitEvents {
 
 	static final class Charges {
 		private final String buff;
+		private final AspectType aspect;
 		private final Supplier<Ability> owner;
 		private final Map<UUID, Integer> left = new HashMap<>();
 
 		Charges(String buff, Supplier<Ability> owner) {
+			this(buff, P, owner);
+		}
+
+		/** Shared with other kits (e.g. Protection -> Healing lady mercy). */
+		Charges(String buff, AspectType aspect, Supplier<Ability> owner) {
 			this.buff = buff;
+			this.aspect = aspect;
 			this.owner = owner;
 		}
 
 		void start(ServerPlayer p, int hits) {
-			AbilityState.of(p).addBuff(new Buff(buff, P, 1.0, 0, false, Long.MAX_VALUE));
+			AbilityState.of(p).addBuff(new Buff(buff, aspect, 1.0, 0, false, Long.MAX_VALUE));
 			left.put(p.getUUID(), hits);
 		}
 
@@ -265,7 +272,7 @@ public final class PhysicalKitEvents {
 			if (n == null)
 				return 0;
 			AbilityState st = AbilityState.of(p);
-			if (!st.hasBuff(buff, now(p)) || !KitResolver.isCurrent(p, owner.get()) || st.isNullified(P, now(p))) {
+			if (!st.hasBuff(buff, now(p)) || !KitResolver.isCurrent(p, owner.get()) || st.isNullified(aspect, now(p))) {
 				left.remove(p.getUUID());
 				return 0;
 			}

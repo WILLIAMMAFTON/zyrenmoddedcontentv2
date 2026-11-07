@@ -33,6 +33,8 @@ public final class SubAspectLearning {
 	public static ActionResult learn(ServerPlayer player, SubAspectType sub) {
 		if (sub == null)
 			return ActionResult.fail("This book is blank.");
+		if (SubAspectTiers.isDisabled(sub))
+			return ActionResult.fail(sub.fullName() + " is disabled on this server.");
 		SubAspectData d = SubAspectData.of(player);
 		if (d.knows(sub))
 			return ActionResult.fail("You already know " + sub.fullName() + ".");
@@ -63,7 +65,7 @@ public final class SubAspectLearning {
 		SubAspectData d = SubAspectData.of(player);
 		List<SubAspectType> options = new ArrayList<>();
 		for (SubAspectType s : SubAspectTiers.tiers(aspect))
-			if (s != null && !d.knows(s))
+			if (s != null && !d.knows(s) && !SubAspectTiers.isDisabled(s))
 				options.add(s);
 		if (options.isEmpty())
 			return ActionResult.fail("You already know every " + aspect.displayName() + " sub-aspect this tome could teach.");

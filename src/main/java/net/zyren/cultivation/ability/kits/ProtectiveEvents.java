@@ -75,7 +75,9 @@ public final class ProtectiveEvents {
 	public static void onDamageTaken(net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Post event) {
 		if (!(event.getEntity() instanceof ServerPlayer player) || event.getNewDamage() <= 0)
 			return;
-		if (AspectData.of(player).getActive() == ProtectiveKit.PR && AbilityState.of(player).passiveActive())
+		// old Protective passive only (kit no longer registered since 2026-11-06)
+		if (AspectData.of(player).getActive() == ProtectiveKit.PR && AbilityState.of(player).passiveActive()
+				&& net.zyren.cultivation.ability.core.KitResolver.passiveFor(player) instanceof ProtectiveKit.Passive)
 			QiCoreStorage.addQi(player, event.getNewDamage() * AbilityConfig.PROT_PASSIVE_QI_PER_DAMAGE.get());
 	}
 

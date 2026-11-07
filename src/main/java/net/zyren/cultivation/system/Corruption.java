@@ -57,9 +57,24 @@ public final class Corruption {
 
 	// ------------------------------------------------------------------ gaining
 
+	/** Temporary full protection from corruption gain (e.g. Protection -> Healing "resistance gift"). */
+	private static final java.util.List<java.util.function.Predicate<ServerPlayer>> PROTECTED = new java.util.ArrayList<>();
+
+	public static void addProtection(java.util.function.Predicate<ServerPlayer> rule) {
+		if (!PROTECTED.contains(rule))
+			PROTECTED.add(rule);
+	}
+
+	private static boolean isProtected(ServerPlayer p) {
+		for (java.util.function.Predicate<ServerPlayer> r : PROTECTED)
+			if (r.test(p))
+				return true;
+		return false;
+	}
+
 	/** Corruption from a source (area, food, Warden...): Core Resistance and the crystal reduce it. */
 	public static void gain(ServerPlayer p, double amount) {
-		if (amount <= 0 || !canCorrupt(p))
+		if (amount <= 0 || !canCorrupt(p) || isProtected(p))
 			return;
 		// CURSED core type: immune; the corruption becomes Cursed Qi. Core Resistance and the
 		// crystal do nothing for Cursed players (decided 2026-11-06), so this comes first.
@@ -79,7 +94,7 @@ public final class Corruption {
 
 	/** Raw change (no reductions): used by the irreversible creep past the point of no return. */
 	public static void add(ServerPlayer p, double amount) {
-		if (amount <= 0 || !canCorrupt(p))
+		if (amount <= 0 || !canCorrupt(p) || isProtected(p))
 			return;
 		if (CursedQi.absorb(p, amount))
 			return;

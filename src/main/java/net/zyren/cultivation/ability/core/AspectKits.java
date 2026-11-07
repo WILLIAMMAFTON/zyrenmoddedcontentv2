@@ -5,7 +5,6 @@ import net.zyren.cultivation.ability.kits.LightningKit;
 import net.zyren.cultivation.ability.kits.FireKit;
 import net.zyren.cultivation.ability.kits.LightKit;
 import net.zyren.cultivation.ability.kits.PureKit;
-import net.zyren.cultivation.ability.kits.ProtectiveKit;
 import net.zyren.cultivation.ability.kits.WaterKit;
 import net.zyren.cultivation.data.AspectType;
 
@@ -38,7 +37,8 @@ public final class AspectKits {
 		register(FireKit.create());
 		register(LightKit.create());
 		register(PureKit.create());
-		register(ProtectiveKit.create());
+		// Protection DEFAULT kit (2026-11-06) replaces the old Protective kit (file kept: its Reinforce is reused).
+		register(net.zyren.cultivation.ability.kits.ProtectionKits.create());
 		register(WaterKit.create());
 		register(net.zyren.cultivation.ability.kits.AirKit.create());
 	}

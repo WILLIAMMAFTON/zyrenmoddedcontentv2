@@ -38,6 +38,7 @@ public final class SubAspectKits {
 		register(net.zyren.cultivation.ability.kits.PhysicalSubKits.warrior());
 		register(net.zyren.cultivation.ability.kits.PhysicalSubKits.body());
 		register(net.zyren.cultivation.ability.kits.PhysicalSubKits.instinct());
+		register(net.zyren.cultivation.ability.kits.ProtectionKits.healing());
 	}
 
 	private static void register(SubAspectKit kit) {

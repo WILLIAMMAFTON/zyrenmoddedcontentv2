@@ -28,6 +28,7 @@ public final class SubAspectConfig {
 	public static final ModConfigSpec.IntValue FORM_TOGGLE_COOLDOWN_SECONDS;
 	public static final ModConfigSpec.DoubleValue LOCKED_LEARN_CULTIVATED_QI;
 	public static final ModConfigSpec.BooleanValue LOCKED_LEARN_FILL_QI;
+	public static final ModConfigSpec.ConfigValue<List<? extends String>> DISABLED;
 
 	/** [aspect][tier 0..2] -> configured sub-aspect id ("" = no sub-aspect in that tier). */
 	private static final Map<AspectType, ModConfigSpec.ConfigValue<String>[]> TIER_IDS = new EnumMap<>(AspectType.class);
@@ -59,6 +60,9 @@ public final class SubAspectConfig {
 		LOCKED_LEARN_FILL_QI = b
 				.comment("...and fills the player's usable Qi to their core's maximum (user: yes).")
 				.define("locked_learn_fill_qi", true);
+		DISABLED = b.comment("Disabled sub-aspects (ids): can't be learned, pulled from tomes, equipped or used. Players who learned one keep it, locked.",
+				"Default: Protection -> Resistance / Nullification (guide: 'disabled until further notice', 2026-11-06).")
+				.defineListAllowEmpty("disabled_subaspects", List.of("PROTECTION_RESISTANCE", "PROTECTION_NULLIFICATION"), o -> o instanceof String);
 		b.pop();
 
 		for (AspectType aspect : SubAspectType.parents()) {
