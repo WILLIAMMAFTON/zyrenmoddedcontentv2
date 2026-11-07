@@ -139,9 +139,10 @@ public final class FireKit {
 		@Override
 		public void refreshEffects(ServerPlayer player) {
 			EffectHelper.apply(player, MobEffects.FIRE_RESISTANCE, 1, 50, false);
-			if (!inFireOrLava(player) || player.getHealth() >= player.getMaxHealth())
+			float hp = net.zyren.cultivation.system.CoreLife.health(player), maxHp = net.zyren.cultivation.system.CoreLife.maxHealth(player);
+			if (!inFireOrLava(player) || hp >= maxHp)
 				return;
-			double hearts = Math.min(FireConfig.HEAL_HEARTS_PER_SECOND.get(), (player.getMaxHealth() - player.getHealth()) / 2.0);
+			double hearts = Math.min(FireConfig.HEAL_HEARTS_PER_SECOND.get(), (maxHp - hp) / 2.0);
 			double cost = QiCosts.effective(player, hearts * FireConfig.HEAL_QI_PER_HEART.get());
 			if (hearts > 0 && QiCoreStorage.trySpendQi(player, cost, false))
 				player.heal((float) (hearts * 2));

@@ -170,7 +170,7 @@ public final class ProtectiveKit {
 		@Override
 		public ActionResult perform(ServerPlayer player) {
 			int ticks = AbilityConfig.PROT_REINFORCE_DURATION.get();
-			boolean full = player.getHealth() >= player.getMaxHealth();
+			boolean full = net.zyren.cultivation.system.CoreLife.health(player) >= net.zyren.cultivation.system.CoreLife.maxHealth(player);
 			QiEffects.applyReinforce(player, PR, ticks);
 			if (!full) {
 				EffectHelper.apply(player, MobEffects.REGENERATION, AbilityConfig.PROT_REINFORCE_SELF_REGEN.get(), ticks, true);

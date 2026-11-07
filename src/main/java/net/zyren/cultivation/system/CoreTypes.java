@@ -47,8 +47,22 @@ public final class CoreTypes {
 		if (old == type)
 			return old;
 		q.setCoreType(type);
-		// Future: per-type effects get applied / removed here (labels only for now).
+		// Becoming CORE with a formed core: fill the pool (it's now the player's health).
+		if (type == CoreType.CORE)
+			CoreLife.fillIfActive(player);
+		// Becoming CURSED: corruption already on the meter turns into Cursed Qi.
+		if (type == CoreType.CURSED)
+			CursedQi.convertMeter(player);
 		return old;
+	}
+
+	/**
+	 * Core types whose normal activity sources give no usable Qi (cultivated / no_qi still count).
+	 * SOUL now; BLOOD will join ("limits qi gain same as soul").
+	 */
+	public static boolean cutsNormalUsableQi(net.minecraft.world.entity.player.Player player) {
+		CoreType t = QiData.of(player).getCoreType();
+		return t == CoreType.SOUL || t == CoreType.BLOOD;
 	}
 
 	/** New random type. May roll the same type again (pure random, equal chances by default). */
@@ -88,6 +102,7 @@ public final class CoreTypes {
 			case VOID -> CultivationConfig.CORE_TYPE_WEIGHT_VOID.get();
 			case CORE -> CultivationConfig.CORE_TYPE_WEIGHT_CORE.get();
 			case SOUL -> CultivationConfig.CORE_TYPE_WEIGHT_SOUL.get();
+			case BLOOD -> CultivationConfig.CORE_TYPE_WEIGHT_BLOOD.get();
 		};
 	}
 }

@@ -267,6 +267,8 @@ public final class CorruptionEvents {
 		} else if (vq.getCoreState() == CoreState.POISONED && attacker.getRandom().nextDouble() < CorruptionConfig.PURE_VS_POISONED_CHANCE.get()) {
 			if (attacker.getRandom().nextDouble() < CorruptionConfig.PURE_VS_POISONED_CURE_SHARE.get())
 				Corruption.setCoreState(victim, CoreState.PURE, "Pure Qi purges the poison. Your Core is PURE again.", ChatFormatting.AQUA);
+			else if (CursedQi.active(victim)) // CURSED cores can't turn Corrupted (decided 2026-11-06)
+				victim.displayClientMessage(net.minecraft.network.chat.Component.literal("Pure Qi clashes with the poison... your cursed Core refuses the corruption.").withStyle(ChatFormatting.DARK_PURPLE), false);
 			else
 				Corruption.setCoreState(victim, CoreState.CORRUPTED, "Pure Qi clashes with the poison... your Core turns CORRUPTED.", ChatFormatting.DARK_PURPLE);
 		}

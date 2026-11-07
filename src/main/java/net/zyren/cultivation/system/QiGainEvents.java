@@ -155,7 +155,7 @@ public final class QiGainEvents {
 
 	// ------------------------------------------------------------------ kills
 
-	private static boolean isBoss(LivingEntity e) {
+	static boolean isBoss(LivingEntity e) {
 		EntityType<?> t = e.getType();
 		return t == EntityType.WITHER || t == EntityType.ENDER_DRAGON || t == EntityType.WARDEN || t == EntityType.ELDER_GUARDIAN;
 	}
@@ -185,7 +185,7 @@ public final class QiGainEvents {
 						killer.displayClientMessage(net.minecraft.network.chat.Component.literal("+" + QiGain.fmt(noQi) + " no_qi (Qi cultivator slain)")
 								.withStyle(net.minecraft.ChatFormatting.AQUA), true);
 				} else {
-					QiGain.grant(killer, QiData.of(vp).getCoreMax(), QiGainConfig.QI_PLAYER_KILL_CULTIVATED.get(), "Qi cultivator slain");
+					QiGain.grantRaw(killer, QiData.of(vp).getCoreMax(), QiGainConfig.QI_PLAYER_KILL_CULTIVATED.get(), "Qi cultivator slain");
 				}
 				return;
 			}

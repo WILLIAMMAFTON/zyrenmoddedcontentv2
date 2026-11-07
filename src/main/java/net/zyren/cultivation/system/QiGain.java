@@ -50,7 +50,18 @@ public final class QiGain {
 		grant(player, source, label);
 	}
 
+	/**
+	 * A normal activity source. SOUL core type (decided 2026-11-06): its usable Qi is cut to 0,
+	 * the cultivated / no_qi part still counts (so Soul players can form and grow their core).
+	 */
 	public static void grant(ServerPlayer player, double usable, double cultivated, String label) {
+		if (CoreTypes.cutsNormalUsableQi(player))
+			usable = 0;
+		grantRaw(player, usable, cultivated, label);
+	}
+
+	/** Grants without the core-type limit: Qi-infused food and the Qi-player kill reward (decided: both still work for Soul). */
+	public static void grantRaw(ServerPlayer player, double usable, double cultivated, String label) {
 		if (!QiGainConfig.ENABLED.get() || player.isSpectator())
 			return;
 		QiData data = QiData.of(player);
@@ -111,11 +122,11 @@ public final class QiGain {
 				message(player, "+" + fmt(toNoQi) + " no_qi (infused food)");
 			if (rest <= 0 || data.getCoreLevel() < 1)
 				return;
-			grant(player, rest, 0, "infused food");
+			grantRaw(player, rest, 0, "infused food");
 			return;
 		}
 		double share = QiGainConfig.INFUSED_CULTIVATED_SHARE.get();
-		grant(player, rest * (1 - share), rest * share, "infused food");
+		grantRaw(player, rest * (1 - share), rest * share, "infused food");
 	}
 
 	private static void message(ServerPlayer player, String text) {

@@ -268,7 +268,7 @@ public final class AbilityEvents {
 			return;
 		AbilityState state = AbilityState.of(player);
 		Ability guard = state.lethalGuard();
-		if (guard == null || event.getNewDamage() < player.getHealth() + player.getAbsorptionAmount())
+		if (guard == null || !net.zyren.cultivation.system.CoreLife.isLethal(player, event.getNewDamage()))
 			return;
 		// Like the Totem of Undying: no saving from /kill or a Corrupted Core's death ("Player dies").
 		if (event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY))

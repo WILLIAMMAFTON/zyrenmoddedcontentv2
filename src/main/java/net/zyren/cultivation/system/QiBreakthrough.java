@@ -56,6 +56,10 @@ public final class QiBreakthrough {
 		AspectData aspects = AspectData.of(player);
 		aspects.setPureLevel(Math.max(aspects.getPureLevel(), CultivationConfig.PURE_LEVEL_ON_CORE_FORMATION.get()));
 
+		// CORE core type: the new core starts full, since Qi is now the player's health.
+		if (player instanceof net.minecraft.server.level.ServerPlayer sp)
+			CoreLife.fillIfActive(sp);
+
 		player.displayClientMessage(Component.literal("Your Qi Core has formed."), false);
 		return true;
 	}

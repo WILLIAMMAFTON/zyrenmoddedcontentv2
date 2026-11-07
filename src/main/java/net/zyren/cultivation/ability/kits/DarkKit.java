@@ -299,7 +299,7 @@ public final class DarkKit {
 		private static final java.util.Map<java.util.UUID, Vec3> FOUND = new java.util.HashMap<>();
 
 		private static boolean lowHealth(ServerPlayer p) {
-			return p.getHealth() < AbilityConfig.DARK_ABILITY1_HEALTH_THRESHOLD.get();
+			return net.zyren.cultivation.system.CoreLife.health(p) < AbilityConfig.DARK_ABILITY1_HEALTH_THRESHOLD.get();
 		}
 
 		@Override

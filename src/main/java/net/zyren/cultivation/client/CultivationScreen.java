@@ -261,7 +261,9 @@ public class CultivationScreen extends Screen {
 		if (q.getCoreLevel() >= 1) {
 			double corruption = net.zyren.cultivation.data.CorruptionData.of(player).getCorruption();
 			double max = net.zyren.cultivation.config.CorruptionConfig.MAX.get();
-			String status = q.getCoreState() == net.zyren.cultivation.data.CoreState.PURE
+			String status = net.zyren.cultivation.system.CursedQi.active(player) && q.getCoreState() == net.zyren.cultivation.data.CoreState.PURE
+					? "Immune to corruption   Cursed Qi " + (int) q.getCursedQi() + " / " + (int) q.getCoreMax()
+					: q.getCoreState() == net.zyren.cultivation.data.CoreState.PURE
 					? "Corruption " + (int) Math.floor(corruption / max * 100) + "% (" + (int) corruption + "/" + (int) max + ")"
 					: "Core state: " + q.getCoreState().id();
 			int med = ClientCorruptionState.meditationSeconds();

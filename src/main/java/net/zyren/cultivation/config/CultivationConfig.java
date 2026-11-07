@@ -24,8 +24,14 @@ public final class CultivationConfig {
 
 	// ---- Core type (Cursed / Elemental / Void / Core / Soul), assigned at random on first join ----
 	public static final ModConfigSpec.DoubleValue CORE_TYPE_WEIGHT_CURSED, CORE_TYPE_WEIGHT_ELEMENTAL, CORE_TYPE_WEIGHT_VOID,
-			CORE_TYPE_WEIGHT_CORE, CORE_TYPE_WEIGHT_SOUL;
+			CORE_TYPE_WEIGHT_CORE, CORE_TYPE_WEIGHT_SOUL, CORE_TYPE_WEIGHT_BLOOD;
 	public static final ModConfigSpec.BooleanValue CORE_TYPE_ANNOUNCE;
+	public static final ModConfigSpec.DoubleValue CORE_QI_PER_DAMAGE, CORE_RESPAWN_QI;
+	public static final ModConfigSpec.DoubleValue CURSED_QI_PER_CORRUPTION;
+	public static final ModConfigSpec.DoubleValue SOUL_RADIUS, SOUL_QI_PLAYER, SOUL_QI_VILLAGER, SOUL_QI_HOSTILE, SOUL_QI_PASSIVE;
+	public static final ModConfigSpec.DoubleValue BLOOD_PLAYER_QI, BLOOD_PLAYER_CULT, BLOOD_VILLAGER_QI, BLOOD_VILLAGER_CULT,
+			BLOOD_HOSTILE_QI, BLOOD_HOSTILE_CULT, BLOOD_PASSIVE_QI, BLOOD_PASSIVE_CULT, BLOOD_BOSS_QI, BLOOD_BOSS_CULT,
+			BLOOD_MULT_SWORD, BLOOD_MULT_AXE, BLOOD_MULT_UNARMED;
 
 	// ---- Advancements ----
 	public static final ModConfigSpec.IntValue ADV_PURE_SUFFERING_LEVEL;
@@ -141,7 +147,38 @@ public final class CultivationConfig {
 		CORE_TYPE_WEIGHT_VOID = b.defineInRange("weight_void", 1.0, 0.0, 1.0E9);
 		CORE_TYPE_WEIGHT_CORE = b.defineInRange("weight_core", 1.0, 0.0, 1.0E9);
 		CORE_TYPE_WEIGHT_SOUL = b.defineInRange("weight_soul", 1.0, 0.0, 1.0E9);
+		CORE_TYPE_WEIGHT_BLOOD = b.defineInRange("weight_blood", 1.0, 0.0, 1.0E9);
 		CORE_TYPE_ANNOUNCE = b.comment("Tell the player their core type in chat when it's first given.").define("announce", true);
+		CORE_QI_PER_DAMAGE = b.comment("CORE type (Qi replaces health): Qi lost per damage point taken (half a heart) and gained per point healed. Decided: 100.")
+				.defineInRange("core_qi_per_damage", 100.0, 0.0, 1.0E9);
+		CORE_RESPAWN_QI = b.comment("CORE type: usable Qi after respawning (flat, any core level; capped at max Qi). Decided: 200.")
+				.defineInRange("core_respawn_qi", 200.0, 0.0, 1.0E9);
+		CURSED_QI_PER_CORRUPTION = b.comment("CURSED type: Cursed Qi stored per corruption point the core is immune to (container capped at max Qi). Decided: 1.")
+				.defineInRange("cursed_qi_per_corruption", 1.0, 0.0, 1.0E9);
+		SOUL_RADIUS = b.comment("SOUL type: entities within this many blocks feed passive Qi. PLACEHOLDER (user picked 8).")
+				.defineInRange("soul_radius", 8.0, 0.0, 128.0);
+		SOUL_QI_PLAYER = b.comment("SOUL type: usable Qi per second for EACH nearby player (stacks per entity, no cap). Decided: 5.")
+				.defineInRange("soul_qi_per_player", 5.0, 0.0, 1.0E9);
+		SOUL_QI_VILLAGER = b.comment("SOUL type: per nearby villager / wandering trader per second. Decided: 3.")
+				.defineInRange("soul_qi_per_villager", 3.0, 0.0, 1.0E9);
+		SOUL_QI_HOSTILE = b.comment("SOUL type: per nearby hostile mob per second. Decided: 2.")
+				.defineInRange("soul_qi_per_hostile", 2.0, 0.0, 1.0E9);
+		SOUL_QI_PASSIVE = b.comment("SOUL type: per nearby passive mob (animals, golems, fish, pets...) per second. Decided: 1.")
+				.defineInRange("soul_qi_per_passive", 1.0, 0.0, 1.0E9);
+		// BLOOD (decided 2026-11-06): usable | cultivated per kill, on top of the normal kill reward's cultivated part.
+		BLOOD_PLAYER_QI = b.comment("BLOOD type: usable Qi for killing a player. Decided: 200.").defineInRange("blood_player_qi", 200.0, 0.0, 1.0E9);
+		BLOOD_PLAYER_CULT = b.comment("BLOOD type: cultivated Qi for killing a player. Decided: 100.").defineInRange("blood_player_cultivated", 100.0, 0.0, 1.0E9);
+		BLOOD_VILLAGER_QI = b.comment("BLOOD type: villager / wandering trader kill. Decided: 100.").defineInRange("blood_villager_qi", 100.0, 0.0, 1.0E9);
+		BLOOD_VILLAGER_CULT = b.comment("Decided: 40.").defineInRange("blood_villager_cultivated", 40.0, 0.0, 1.0E9);
+		BLOOD_HOSTILE_QI = b.comment("BLOOD type: hostile mob kill. Decided: 90.").defineInRange("blood_hostile_qi", 90.0, 0.0, 1.0E9);
+		BLOOD_HOSTILE_CULT = b.comment("Decided: 45.").defineInRange("blood_hostile_cultivated", 45.0, 0.0, 1.0E9);
+		BLOOD_PASSIVE_QI = b.comment("BLOOD type: passive mob kill (animals, golems, fish...). Decided: 75.").defineInRange("blood_passive_qi", 75.0, 0.0, 1.0E9);
+		BLOOD_PASSIVE_CULT = b.comment("Decided: 55.").defineInRange("blood_passive_cultivated", 55.0, 0.0, 1.0E9);
+		BLOOD_BOSS_QI = b.comment("BLOOD type: Wither / Ender Dragon / Warden / Elder Guardian kill. Decided: 500.").defineInRange("blood_boss_qi", 500.0, 0.0, 1.0E9);
+		BLOOD_BOSS_CULT = b.comment("Decided: 300.").defineInRange("blood_boss_cultivated", 300.0, 0.0, 1.0E9);
+		BLOOD_MULT_SWORD = b.comment("BLOOD type: melee-kill multiplier on the Blood reward, sword in main hand. Decided: 1.5.").defineInRange("blood_melee_sword", 1.5, 0.0, 1000.0);
+		BLOOD_MULT_AXE = b.comment("Axe in main hand. Decided: 1.3.").defineInRange("blood_melee_axe", 1.3, 0.0, 1000.0);
+		BLOOD_MULT_UNARMED = b.comment("Empty hand. Decided: 1. (Other held items, projectiles and abilities: x1.)").defineInRange("blood_melee_unarmed", 1.0, 0.0, 1000.0);
 		b.pop();
 
 		b.comment("Advancement thresholds").push("advancements");

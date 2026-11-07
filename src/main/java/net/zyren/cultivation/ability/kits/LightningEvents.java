@@ -209,7 +209,7 @@ public final class LightningEvents {
 	/** Storm Conduit lethal save: runs last, on fully modified final damage. */
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onPossiblyLethal(LivingDamageEvent.Pre event) {
-		if (!(event.getEntity() instanceof ServerPlayer player) || event.getNewDamage() < player.getHealth() + player.getAbsorptionAmount())
+		if (!(event.getEntity() instanceof ServerPlayer player) || !net.zyren.cultivation.system.CoreLife.isLethal(player, event.getNewDamage()))
 			return;
 		// Like the Totem of Undying: no saving from /kill or a Corrupted Core's death ("Player dies").
 		if (event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY))

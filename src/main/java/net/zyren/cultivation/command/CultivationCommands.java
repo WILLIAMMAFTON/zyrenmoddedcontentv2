@@ -142,6 +142,21 @@ public final class CultivationCommands {
 		root.then(Commands.literal("crystal").executes(ctx -> action(ctx, net.zyren.cultivation.network.CultivationActionRequest.RECHARGE_CRYSTAL)));
 
 		// Debug: corruption
+		// CURSED core type: the Cursed Qi container (test/admin).
+		root.then(Commands.literal("cursedqi").requires(OP)
+				.executes(ctx -> {
+					ServerPlayer p = ctx.getSource().getPlayerOrException();
+					reply(ctx, "Cursed Qi " + fmt(QiData.of(p).getCursedQi()) + " / " + fmt(net.zyren.cultivation.system.CursedQi.cap(p))
+							+ (net.zyren.cultivation.system.CursedQi.active(p) ? "" : " (not collecting: needs a CURSED core type and a formed core)"));
+					return 1;
+				})
+				.then(Commands.literal("set").then(Commands.argument("amount", DoubleArgumentType.doubleArg(0)).executes(ctx -> {
+					ServerPlayer p = ctx.getSource().getPlayerOrException();
+					net.zyren.cultivation.system.CursedQi.set(p, DoubleArgumentType.getDouble(ctx, "amount"));
+					reply(ctx, "Cursed Qi set to " + fmt(QiData.of(p).getCursedQi()) + " (capped at max Qi).");
+					return 1;
+				}))));
+
 		root.then(Commands.literal("corruption").requires(OP)
 				.then(Commands.literal("get").executes(ctx -> {
 					ServerPlayer p = ctx.getSource().getPlayerOrException();

@@ -61,6 +61,10 @@ public final class Corruption {
 	public static void gain(ServerPlayer p, double amount) {
 		if (amount <= 0 || !canCorrupt(p))
 			return;
+		// CURSED core type: immune; the corruption becomes Cursed Qi. Core Resistance and the
+		// crystal do nothing for Cursed players (decided 2026-11-06), so this comes first.
+		if (CursedQi.absorb(p, amount))
+			return;
 		if (hasResistance(p))
 			amount *= 1 - CorruptionConfig.RESISTANCE_REDUCTION.get();
 		ItemStack crystal = activeCrystal(p);
@@ -76,6 +80,8 @@ public final class Corruption {
 	/** Raw change (no reductions): used by the irreversible creep past the point of no return. */
 	public static void add(ServerPlayer p, double amount) {
 		if (amount <= 0 || !canCorrupt(p))
+			return;
+		if (CursedQi.absorb(p, amount))
 			return;
 		CorruptionData c = CorruptionData.of(p);
 		double before = c.getCorruption();

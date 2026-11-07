@@ -3,7 +3,7 @@ package net.zyren.cultivation.data;
 import java.util.Locale;
 
 /**
- * The core TYPE (added 2026-10-30): what kind of core a player was born with. Assigned at random
+ * The core TYPE (added 2026-10-30; BLOOD added 2026-11-06): what kind of core a player was born with. Assigned at random
  * the first time a player joins (system/CoreTypes) and kept for good; core breaks, annihilation,
  * death and /qi reset do NOT change it. Later items/actions will change it through
  * CoreTypes.set(...).
@@ -18,7 +18,8 @@ public enum CoreType {
 	ELEMENTAL("Elemental"),
 	VOID("Void"),
 	CORE("Core"),
-	SOUL("Soul");
+	SOUL("Soul"),
+	BLOOD("Blood");
 
 	private final String displayName;
 

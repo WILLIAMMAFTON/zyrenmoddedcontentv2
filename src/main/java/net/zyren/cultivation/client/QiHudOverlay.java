@@ -48,6 +48,9 @@ public final class QiHudOverlay {
 	private static final int SWITCH_FILL = 0xFFE0C060;
 	private static final int CHOICE_COLOR = 0xFFFFE070;
 
+	private static int soulTick = -1;
+	private static double soulRate;
+
 	private QiHudOverlay() {
 	}
 
@@ -71,7 +74,7 @@ public final class QiHudOverlay {
 		Font font = mc.font;
 
 		// Text line: "Qi 20 / 50"
-		String label = "Qi ";
+		String label = net.zyren.cultivation.system.CoreLife.active(player) ? "Life Qi " : "Qi ";
 		g.drawString(font, label, X, Y, LABEL_COLOR, true);
 		g.drawString(font, max > 0 ? fmt(amount) + " / " + fmt(max) : fmt(amount), X + font.width(label), Y, TEXT_COLOR, true);
 
@@ -131,6 +134,20 @@ public final class QiHudOverlay {
 			lineY += font.lineHeight + 1;
 			g.drawString(font, "Corruption " + (int) Math.floor(corruption / cMax * 100) + "%" + (lost ? "  IRREVERSIBLE" : ""), X, lineY,
 					lost ? NULLIFIED_COLOR : CHOICE_COLOR, true);
+		}
+		// SOUL core type: what nearby souls give per second (recomputed once a second)
+		if (net.zyren.cultivation.system.SoulQi.active(player)) {
+			if (player.tickCount != soulTick && player.tickCount % 20 == 0 || soulTick < 0) {
+				soulTick = player.tickCount;
+				soulRate = net.zyren.cultivation.system.SoulQi.perSecond(player);
+			}
+			lineY += font.lineHeight + 1;
+			g.drawString(font, "Souls nearby: +" + fmt(soulRate) + " Qi/s", X, lineY, 0xFF9FD8FF, true);
+		}
+		// CURSED core type: the separate Cursed Qi container
+		if (net.zyren.cultivation.system.CursedQi.active(player)) {
+			lineY += font.lineHeight + 1;
+			g.drawString(font, "Cursed Qi " + fmt(data.getCursedQi()) + " / " + fmt(data.getCoreMax()), X, lineY, 0xFFB070FF, true);
 		}
 		int med = ClientCorruptionState.meditationSeconds(), after = ClientCorruptionState.afterSeconds();
 		if (med > 0 || after > 0) {

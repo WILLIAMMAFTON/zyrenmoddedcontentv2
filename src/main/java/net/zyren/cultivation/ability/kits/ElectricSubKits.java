@@ -241,7 +241,7 @@ public final class ElectricSubKits {
 		}
 
 		static boolean low(ServerPlayer p) {
-			return p.getHealth() < ElectricConfig.ER_A2_LOW_HEALTH.get();
+			return net.zyren.cultivation.system.CoreLife.health(p) < ElectricConfig.ER_A2_LOW_HEALTH.get();
 		}
 
 		@Override

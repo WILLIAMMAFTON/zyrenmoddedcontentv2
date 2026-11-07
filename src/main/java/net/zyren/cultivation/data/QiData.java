@@ -114,6 +114,19 @@ public final class QiData {
 		dirty();
 	}
 
+	// ---- cursed_qi: CURSED core type's separate container (filled by corruption it is immune to) ----
+	public double getCursedQi() {
+		return vars.cursed_qi;
+	}
+
+	public void setCursedQi(double value) {
+		value = Math.max(0, value);
+		if (vars.cursed_qi != value) {
+			vars.cursed_qi = value;
+			dirty();
+		}
+	}
+
 	/** Puts the player back into the spec's initial state (section 3). The core type is kept. */
 	public void resetToInitialState() {
 		vars.no_qi = 0;
