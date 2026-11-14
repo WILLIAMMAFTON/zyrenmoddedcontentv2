@@ -30,6 +30,8 @@ public final class CultivationKeybinds {
 	public static final KeyMapping TOGGLE_FORM = new KeyMapping("Toggle Sub-aspect Form", InputConstants.KEY_G, "Cultivation");
 	/** Electric -> Enhanced Receptors passive mode 1 <-> 2. Guide said F, but F is vanilla "swap offhand" (user rec 2026-10-29: V). */
 	public static final KeyMapping SWITCH_MODE = new KeyMapping("Switch Receptor Mode", InputConstants.KEY_V, "Cultivation");
+	/** Space spatial anchor: teleport back to it (user rec 2026-11-14: B). */
+	public static final KeyMapping ANCHOR_RECALL = new KeyMapping("Space Anchor Recall", InputConstants.KEY_B, "Cultivation");
 
 	private CultivationKeybinds() {
 	}
@@ -40,6 +42,7 @@ public final class CultivationKeybinds {
 		event.register(ABILITY_WHEEL);
 		event.register(TOGGLE_FORM);
 		event.register(SWITCH_MODE);
+		event.register(ANCHOR_RECALL);
 	}
 
 	@SubscribeEvent
@@ -73,6 +76,19 @@ public final class CultivationKeybinds {
 				continue;
 			net.neoforged.neoforge.network.PacketDistributor.sendToServer(net.zyren.cultivation.network.SwitchModeRequest.INSTANCE);
 		}
+		while (ANCHOR_RECALL.consumeClick()) {
+			if (mc.player == null || mc.screen != null)
+				continue;
+			net.neoforged.neoforge.network.PacketDistributor.sendToServer(new net.zyren.cultivation.network.SpaceActionRequest(net.zyren.cultivation.network.SpaceActionRequest.RECALL));
+		}
+	}
+
+	/** Sneak + right-click air with an empty hand: the server isn't told about these, so send it (Space -> Dimensional travel). */
+	@SubscribeEvent
+	public static void onRightClickEmpty(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickEmpty event) {
+		if (event.getHand() != net.minecraft.world.InteractionHand.MAIN_HAND || !event.getEntity().isShiftKeyDown() || !event.getEntity().getMainHandItem().isEmpty())
+			return;
+		net.neoforged.neoforge.network.PacketDistributor.sendToServer(new net.zyren.cultivation.network.SpaceActionRequest(net.zyren.cultivation.network.SpaceActionRequest.JUMP));
 	}
 
 	@SubscribeEvent

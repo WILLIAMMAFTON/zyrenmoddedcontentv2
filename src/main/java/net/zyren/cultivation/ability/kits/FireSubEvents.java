@@ -107,7 +107,7 @@ public final class FireSubEvents {
 
 	/** Water / Air users, or Space users in the Matter form. */
 	static boolean isWaterAirOrMatter(ServerPlayer p) {
-		return isWaterOrAir(p) || KitResolver.formInUse(p) == net.zyren.cultivation.data.SubAspectType.SPACE_MATTER;
+		return isWaterOrAir(p) || KitResolver.formInUse(p) == net.zyren.cultivation.data.SubAspectType.SPACE_ENERGY; // guide still says "space:matter" (Matter was replaced by Energy 2026-11-14)
 	}
 
 	static boolean isWaterOrAir(ServerPlayer p) {

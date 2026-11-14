@@ -39,6 +39,8 @@ public final class AspectKits {
 		register(PureKit.create());
 		// Protection DEFAULT kit (2026-11-06) replaces the old Protective kit (file kept: its Reinforce is reused).
 		register(net.zyren.cultivation.ability.kits.ProtectionKits.create());
+		// Space DEFAULT kit (2026-11-14): its first kit; Space is now offered at breakthrough.
+		register(net.zyren.cultivation.ability.kits.SpaceKits.create());
 		register(WaterKit.create());
 		register(net.zyren.cultivation.ability.kits.AirKit.create());
 	}

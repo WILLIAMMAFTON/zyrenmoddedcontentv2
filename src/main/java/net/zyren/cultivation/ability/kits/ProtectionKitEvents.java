@@ -263,7 +263,7 @@ public final class ProtectionKitEvents {
 			victim.displayClientMessage(Component.literal("Error: Insufficient power. Superfluous systems offline").withStyle(ChatFormatting.RED), false);
 			return;
 		}
-		if (!(owner instanceof ServerPlayer a))
+		if (!(owner instanceof ServerPlayer a) || CastRules.hiddenFromTargeting(a)) // e.g. Space dimentional shift
 			return;
 		AspectType asp = AspectData.of(a).getActive();
 		SubAspectType sub = KitResolver.formInUse(a);

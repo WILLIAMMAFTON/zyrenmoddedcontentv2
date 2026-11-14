@@ -275,6 +275,7 @@ public final class AirSubEvents {
 		return switch (kind) {
 			case TEMP_GALE -> AirSubKits.galeOn(p) && !galeBlocked(p);
 			case TEMP_BOMBER -> running(p, AirSubKits.BOMBER);
+			case SpaceKitEvents.TEMP_CHORUS -> SpaceKitEvents.chorusEntitled(p);
 			default -> false;
 		};
 	}

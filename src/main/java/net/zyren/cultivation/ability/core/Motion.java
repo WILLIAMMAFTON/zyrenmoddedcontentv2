@@ -116,6 +116,11 @@ public final class Motion {
 		JOBS.put(j.entity.getUUID(), j);
 	}
 
+	/** Cancels any throw / pull / slam on this entity (e.g. Space -> Energy dimensional shear). */
+	public static void cancel(LivingEntity e) {
+		JOBS.remove(e.getUUID());
+	}
+
 	public static boolean isMoving(LivingEntity e) {
 		return JOBS.containsKey(e.getUUID());
 	}

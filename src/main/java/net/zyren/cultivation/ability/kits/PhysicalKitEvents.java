@@ -130,6 +130,17 @@ public final class PhysicalKitEvents {
 		return until(MOBILITY_LOCK, p);
 	}
 
+	/** Movement / teleport / escape abilities blocked for this long (also used by Space -> Energy). */
+	static void lockMobility(ServerPlayer p, int ticks) {
+		long until = now(p) + ticks;
+		MOBILITY_LOCK.merge(p.getUUID(), until, Math::max);
+	}
+
+	/** Stops a Physical flight (jumpin blow / boulder / dashing fists) in progress. */
+	static void cancelFlight(ServerPlayer p) {
+		FLIGHTS.removeIf(f -> f.p == p);
+	}
+
 	static boolean isMobility(Ability a) {
 		String n = a.name().toLowerCase(Locale.ROOT);
 		for (String s : PhysicalConfig.MOBILITY_ABILITIES.get())

@@ -277,7 +277,7 @@ public final class FireEvents {
 			Set<SubAspectType> sensed = sensedForms();
 			int r = FireConfig.SENSE_RADIUS.get(), nameR = FireConfig.SENSE_NAME_RADIUS.get();
 			for (ServerPlayer o : p.serverLevel().players()) {
-				if (o == p || !o.isAlive() || o.isSpectator() || o.distanceTo(p) > r)
+				if (o == p || !o.isAlive() || o.isSpectator() || o.distanceTo(p) > r || net.zyren.cultivation.ability.core.CastRules.hiddenFromTargeting(o))
 					continue;
 				SubAspectType form = KitResolver.formInUse(o);
 				if (form == null || !sensed.contains(form))

@@ -39,6 +39,9 @@ public final class SubAspectKits {
 		register(net.zyren.cultivation.ability.kits.PhysicalSubKits.body());
 		register(net.zyren.cultivation.ability.kits.PhysicalSubKits.instinct());
 		register(net.zyren.cultivation.ability.kits.ProtectionKits.healing());
+		register(net.zyren.cultivation.ability.kits.SpaceKits.dimensional());
+		register(net.zyren.cultivation.ability.kits.SpaceKits.abyssal());
+		register(net.zyren.cultivation.ability.kits.SpaceKits.energy());
 	}
 
 	private static void register(SubAspectKit kit) {

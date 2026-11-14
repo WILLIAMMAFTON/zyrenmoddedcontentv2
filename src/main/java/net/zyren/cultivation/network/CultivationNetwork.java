@@ -19,7 +19,7 @@ import net.zyren.cultivation.system.ActionResult;
  */
 @EventBusSubscriber(modid = "zyrenmoddedcontent_v2")
 public final class CultivationNetwork {
-	private static final String PROTOCOL_VERSION = "13"; // 13: receptor mode switch (Electric -> Enhanced Receptors)
+	private static final String PROTOCOL_VERSION = "14"; // 14: Space actions (anchor recall, Dimensional travel); 13: receptor mode switch
 
 	private CultivationNetwork() {
 	}
@@ -38,6 +38,7 @@ public final class CultivationNetwork {
 		r.playToServer(EquipSubAspectRequest.TYPE, EquipSubAspectRequest.STREAM_CODEC, EquipSubAspectRequest::handle);
 		r.playToServer(PickTargetRequest.TYPE, PickTargetRequest.STREAM_CODEC, PickTargetRequest::handle);
 		r.playToServer(SwitchModeRequest.TYPE, SwitchModeRequest.STREAM_CODEC, SwitchModeRequest::handle);
+		r.playToServer(SpaceActionRequest.TYPE, SpaceActionRequest.STREAM_CODEC, SpaceActionRequest::handle);
 		// server -> client
 		r.playToClient(SwitchStatusMessage.TYPE, SwitchStatusMessage.STREAM_CODEC, SwitchStatusMessage::handle);
 		r.playToClient(FeedbackMessage.TYPE, FeedbackMessage.STREAM_CODEC, FeedbackMessage::handle);

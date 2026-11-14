@@ -69,7 +69,8 @@ public final class PhysicalConfig {
 				"(Physical 'my fist, ur fase'). Ender pearls and chorus fruit are blocked too.")
 				.defineListAllowEmpty("mobility_abilities", List.of("DASH", "JUMPIN BLOW", "SIDESTEP", "to the horizons", "i am the boulder",
 						"dashing fists of fury", "my fist, ur fase", "sandworm", "riding the lightning", "burning gaze", "Burning retreat", "water seeker",
-						"I Am Good", "BURNN"), o -> o instanceof String);
+						"I Am Good", "BURNN", "spatial anchor", "relocation", "Hi there", "blink", "Rift Step"),
+						o -> o instanceof String);
 		b.pop();
 
 		b.comment("DEFAULT passive: Strength, Haste ('attack speed'), Speed.").push("passive");

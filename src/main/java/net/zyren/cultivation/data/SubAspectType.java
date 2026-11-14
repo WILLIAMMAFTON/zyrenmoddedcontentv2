@@ -61,7 +61,7 @@ public enum SubAspectType {
 	AIR_GALE(AspectType.AIR, "Gale"),
 
 	SPACE_DIMENSIONAL(AspectType.SPACE, "Dimensional"),
-	SPACE_MATTER(AspectType.SPACE, "Matter"),
+	SPACE_ENERGY(AspectType.SPACE, "Energy"), // was SPACE_MATTER (guide 2026-11-14: Matter replaced by Energy); old id still parses
 	SPACE_ABYSSAL(AspectType.SPACE, "Abyssal");
 
 	private final AspectType parent;
@@ -134,6 +134,8 @@ public enum SubAspectType {
 			return null;
 		if (cleaned.equals("PHYSICAL_MIND"))
 			return PHYSICAL_INSTINCT; // renamed 2026-11-06: saves holding the old id get Instinct
+		if (cleaned.equals("SPACE_MATTER"))
+			return SPACE_ENERGY; // renamed 2026-11-14: Matter -> Energy
 		try {
 			return valueOf(cleaned);
 		} catch (IllegalArgumentException e) {

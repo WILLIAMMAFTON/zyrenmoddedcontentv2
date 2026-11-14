@@ -46,7 +46,7 @@ public final class WaterSubKits {
 	/** Water / Fire users, or Space users in the Matter form (Freezing core's targets). */
 	static boolean isWaterFireOrMatter(ServerPlayer p) {
 		AspectType a = AspectData.of(p).getActive();
-		return a == AspectType.WATER || a == AspectType.FIRE || KitResolver.formInUse(p) == SubAspectType.SPACE_MATTER;
+		return a == AspectType.WATER || a == AspectType.FIRE || KitResolver.formInUse(p) == SubAspectType.SPACE_ENERGY; // guide still says "space:matter" (Matter was replaced by Energy 2026-11-14)
 	}
 
 	static void snow(ServerPlayer at) {
